@@ -6,8 +6,7 @@ with an effective DRAM repartition strategy, and thus significantly enhance the 
 further mitigate data accesses to NVM. Compared to previous studies, our hot data migration policy is implemented at the application-level, without modifying hardware and operating
 systems. 
 
-We implement the proposed system with Memcached (https://memcached.org/).
-
+We implement the proposed system with Memcached (https://memcached.org/). 
 Compared on the vanilla Memcached, HMCached has added the following functions:
 
 * **Architecture**:
@@ -20,7 +19,7 @@ HMCached Usage
 
 ## 1.External Dependencies
 
-* NUMA-based machine
+* NUMA-based machine: 
 * NVM,
 
 * libevent, http://www.monkey.org/~provos/libevent/ (libevent-dev)
@@ -73,6 +72,6 @@ STAT pid 8861
 
 Support or Contact
 ------------
-HSCC is developed at SCTS&CGCL Lab (http://grid.hust.edu.cn/) by Zhiwei Li, Haikun Liu and Xiaofei Liao. 
+HMCached is developed at SCTS&CGCL Lab (http://grid.hust.edu.cn/) by Zhiwei Li, Haikun Liu and Xiaofei Liao. 
 For any questions, please contact Zhiwei Li(leezw@hust.edu.cn),
 Haikun Liu (hkliu@hust.edu.cn) and Xiaofei Liao (xfliao@hust.edu.cn).
