@@ -1,7 +1,11 @@
-# Memcached
+# HMCached: An In-Memory Key-Value Store on Hybrid DRAM/NVM Memories
 
-Memcached is a high performance multithreaded event-based key/value cache
-store intended to be used in a distributed system.
+&#160; &#160; &#160; &#160; HMCached is a in-memory key-value store built on a DRAM/NVM hybrid memory system. HMCached develops an application-level data access accounting mechanism to track hotness of
+objects on NVM, and migrates them to fast DRAM based on dynamic hotness threshold adjustment. HMCached adopts slab-based memory allocation and solves the slab calcification problem
+with an effective DRAM repartition strategy, and thus significantly enhance the performance gain from the small-size DRAM. Moreover, we propose a NVM-friendly index structure to
+further mitigate data accesses to NVM. Compared to previous studies, our hot data migration policy is implemented at the application level, without modifying hardware and operating
+systems. We implement the proposed schemes with Memcached.
+
 
 See: https://memcached.org/about
 
