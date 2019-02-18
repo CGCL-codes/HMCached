@@ -2141,7 +2141,7 @@ static void *dram_rebalance_thread(void *arg)
 
             decay_counter_times = 0;
             decay_counter_nvm_times = 0;
-            do_dram_reallocate(slabs_new);
+            do_dram_repartition(slabs_new);
 
             pthread_mutex_lock(&slabs_lock);            
 
@@ -2618,7 +2618,7 @@ static void *update_counter_thread(void *arg)
                 uint64_t oldval = tmp;
                 tmp = element;
                 uint64_t newval = tmp;
-                update_reallocate_counter(i, oldval, newval);
+                update_repartition_counter(i, oldval, newval);
             }
         }
         if (empty)

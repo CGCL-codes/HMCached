@@ -548,7 +548,7 @@ configure:5453: $? = 0
 configure:5489: result: (system)
 configure:5508: checking for library containing umem_cache_create
 configure:5539: gcc -std=gnu99 -o conftest -g -O2 -pthread -pthread   conftest.c -levent  >&5
-/tmp/ccmOgKJX.o: In function `main':
+/tmp/ccMUcZeX.o: In function `main':
 /home/leezw/HMCached/conftest.c:33: undefined reference to `umem_cache_create'
 collect2: error: ld returned 1 exit status
 configure:5539: $? = 1
@@ -633,7 +633,7 @@ configure: failed program was:
 configure:5556: result: no
 configure:5564: checking for library containing gethugepagesizes
 configure:5595: gcc -std=gnu99 -o conftest -g -O2 -pthread -pthread   conftest.c -levent  >&5
-/tmp/ccgX4qT4.o: In function `main':
+/tmp/ccwbObb4.o: In function `main':
 /home/leezw/HMCached/conftest.c:33: undefined reference to `gethugepagesizes'
 collect2: error: ld returned 1 exit status
 configure:5595: $? = 1
@@ -870,7 +870,7 @@ conftest.c: In function 'main':
 conftest.c:38:11: warning: implicit declaration of function 'htonll' [-Wimplicit-function-declaration]
            return htonll(0);
            ^
-/tmp/cc7t2sty.o: In function `main':
+/tmp/ccGNwbYE.o: In function `main':
 /home/leezw/HMCached/conftest.c:38: undefined reference to `htonll'
 collect2: error: ld returned 1 exit status
 configure:6039: $? = 1
@@ -928,7 +928,7 @@ configure:6120: $? = 0
 configure:6120: result: yes
 configure:6131: checking for getpagesizes
 configure:6131: gcc -std=gnu99 -o conftest -g -O2 -pthread -pthread   conftest.c -levent  >&5
-/tmp/ccH2j4oN.o: In function `main':
+/tmp/ccx9ruDX.o: In function `main':
 /home/leezw/HMCached/conftest.c:62: undefined reference to `getpagesizes'
 collect2: error: ld returned 1 exit status
 configure:6131: $? = 1
@@ -1001,7 +1001,7 @@ configure: failed program was:
 configure:6131: result: no
 configure:6142: checking for memcntl
 configure:6142: gcc -std=gnu99 -o conftest -g -O2 -pthread -pthread   conftest.c -levent  >&5
-/tmp/ccXJZBuV.o: In function `main':
+/tmp/cc49Wim3.o: In function `main':
 /home/leezw/HMCached/conftest.c:62: undefined reference to `memcntl'
 collect2: error: ld returned 1 exit status
 configure:6142: $? = 1
@@ -1159,7 +1159,7 @@ configure: failed program was:
 configure:6329: result: no
 configure:6334: checking for setppriv
 configure:6334: gcc -std=gnu99 -o conftest -g -O2 -pthread -pthread   conftest.c -levent  >&5
-/tmp/ccTm35Nw.o: In function `main':
+/tmp/cc9BhTxw.o: In function `main':
 /home/leezw/HMCached/conftest.c:69: undefined reference to `setppriv'
 collect2: error: ld returned 1 exit status
 configure:6334: $? = 1
@@ -1239,7 +1239,7 @@ configure: failed program was:
 configure:6334: result: no
 configure:6412: checking for pledge
 configure:6412: gcc -std=gnu99 -o conftest -g -O2 -pthread -pthread   conftest.c -levent  >&5
-/tmp/ccYW2XCB.o: In function `main':
+/tmp/cc1VX5zB.o: In function `main':
 /home/leezw/HMCached/conftest.c:69: undefined reference to `pledge'
 collect2: error: ld returned 1 exit status
 configure:6412: $? = 1

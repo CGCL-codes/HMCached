@@ -21,22 +21,24 @@ HMCached Setup, Compiling, Configuration and How to use
 ```javascript
 [root @node1 HMCached]# cd dram_repartition
 [root @node1 dram_repartition]# make
-[root @node1 HME]# cp libdram_repartition.so /usr/lib
-[root @node1 HME]# cd HMCached
-[root @node1 HMCached]# ./configure && make && make install
+[root @node1 HMCached]# cp libdram_repartition.so /usr/lib
+[root @node1 HMCached]# cd HMCached
+[root @node1 HMCached]# autoreconf -fis 
+[root @node1 HMCached]# ./configure
+[root @node1 HMCached]# make
 ```
 
-## Environment
+# 3.Configuration
 
-Be warned that the -k (mlockall) option to memcached might be
-dangerous when using a large cache.  Just make sure the memcached machines
-don't swap.  memcached does non-blocking network I/O, but not disk.  (it
-should never go to disk, or you've lost the whole point of it)
 
-## Website
+# 4.Running
 
-* http://www.memcached.org
 
-## Contributing
+# 5. Available Benchmarks
 
-See https://github.com/memcached/memcached/wiki/DevelopmentRepos
+* Yahoo! Cloud Serving Benchmark, https://github.com/brianfrankcooper/YCSB
+* Mutilate: high-performance memcached load generator, https://github.com/leverich/mutilate
+
+Support or Contact
+------------
+If you have any questions, please contact Zhiwei Li(leezw@hust.edu.cn), Haikun Liu (hkliu@hust.edu.cn) and Xiaofei Liao (xfliao@hust.edu.cn).

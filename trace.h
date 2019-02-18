@@ -4,14 +4,10 @@
 #ifdef ENABLE_DTRACE
 #include "memcached_dtrace.h"
 #else
-void update_reallocate_counter(unsigned slabs_clsid, unsigned oldval, unsigned newval);
-void print_reallocate_counter(unsigned slabs_clsid);
-void do_dram_reallocate(unsigned int *slabs_new);
-void print_counter_to_file(char *filename);
 
-void update_reallocate_counter_nolock(unsigned slabs_clsid, unsigned oldval, unsigned newval);
-void lock_counter(unsigned id);
-void unlock_counter(unsigned id);
+// ***** DRAM Repartition *****
+void update_repartition_counter(unsigned slabs_clsid, unsigned oldval, unsigned newval);
+void do_dram_repartition(unsigned int *slabs_new);
 
 #define MEMCACHED_ASSOC_DELETE(arg0, arg1)
 #define MEMCACHED_ASSOC_DELETE_ENABLED() (0)
