@@ -49,13 +49,13 @@ The run mode of HMCached is similar to Memcached.
 
 The following operation is based on an assumption that memory in Node 0 is DRAM while memory in Node 1 is NVM.
 ```javascript
-[user @node1 HMCached]$ numactl --cpunodebind=0 --membind=0 ./memcached -l 127.0.0.1 -p 11211
+[user @node1 HMCached]$ numactl --cpunodebind=0 --membind=0 ./memcached -l 127.1.1.1 -p 11211
 ```
 
 #### Client-side (e.g., running with telnet):
 ```javascript
-[user @node1 home]$ telnet 127.0.0.1 11211
-Trying 127.0.0.1...
+[user @node1 home]$ telnet 127.1.1.1 11211
+Trying 127.1.1.1...
 Connected to localhost.
 Escape character is '^]'.
 get foo
