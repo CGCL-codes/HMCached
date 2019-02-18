@@ -20,8 +20,10 @@ HMCached Setup, Compiling, Configuration and How to use
 
 ```javascript
 [root @node1 HMCached]# cd dram_repartition
-[root @node1 dram_repartition]# cd HME
-[root @node1 HMCached]# make  //to compiling the HME
+[root @node1 dram_repartition]# make
+[root @node1 HME]# cp libdram_repartition.so /usr/lib
+[root @node1 HME]# cd HMCached
+[root @node1 HMCached]# ./configure && make && make install
 ```
 
 ## Environment
