@@ -14,6 +14,7 @@ HMCached Setup, Compiling, Configuration and How to use
 * libevent, http://www.monkey.org/~provos/libevent/ (libevent-dev)
 * libseccomp, (optional, linux) - enables process restrictions for better
   security.
+* numactl-devel
 
 ## 2.Compiling
 
