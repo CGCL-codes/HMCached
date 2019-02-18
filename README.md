@@ -9,23 +9,19 @@ systems. We implement the proposed schemes with Memcached.
 HMCached Setup, Compiling, Configuration and How to use
 ------------
 
-See: https://memcached.org/about
-
-A fun story explaining usage: https://memcached.org/tutorial
-
-If you're having trouble, try the wiki: https://memcached.org/wiki
-
-If you're trying to troubleshoot odd behavior or timeouts, see:
-https://memcached.org/timeouts
-
-https://memcached.org/ is a good resource in general. Please use the mailing
-list to ask questions, github issues aren't seen by everyone!
-
-## Dependencies
+## 1.Dependencies
 
 * libevent, http://www.monkey.org/~provos/libevent/ (libevent-dev)
 * libseccomp, (optional, linux) - enables process restrictions for better
   security.
+
+## 2.Compiling
+
+```javascript
+[root @node1 HMCached]# cd dram_repartition
+[root @node1 dram_repartition]# cd HME
+[root @node1 HMCached]# make  //to compiling the HME
+```
 
 ## Environment
 

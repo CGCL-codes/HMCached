@@ -1,0 +1,5 @@
+编译库之后复制到 /usr/lib
+
+编辑/etc/ld.so.conf文件, 加入库文件所在目录的路径
+
+运行ldconfig, 该命令会重建/etc/ld.so.cache文件
