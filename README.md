@@ -7,27 +7,29 @@ further mitigate data accesses to NVM. Compared to previous studies, our hot dat
 systems. 
 
 We implement the proposed system with Memcached (https://memcached.org/). 
-Compared on the vanilla Memcached, HMCached has added the following functions:
 
+<!--
+Compared on the vanilla Memcached, HMCached has added the following functions:
 * **Architecture**:
 * **NVM-friendly Index Structure**:
 * **Hotness-Aware Object Migration**:
 * **Slab-based memory management**:
+-->
 
 HMCached Usage
 ------------
 
-## 1.External Dependencies
+### 1.External Dependencies
 
-* NUMA-based machine: 
-* NVM,
-
-* libevent, http://www.monkey.org/~provos/libevent/ (libevent-dev)
-* libseccomp, (optional, linux) - enables process restrictions for better
-  security.
+* NUMA system: HMCached must runs in a non-uniform memory access (NUMA) system with multiple NUMA nodes,
+               and each node presents a type of memory mediums.
+* NVM device: If without available NVM device, you can use HME for emulation, https://github.com/CGCL-codes/HME.
 * numactl-devel
+* libevent: http://www.monkey.org/~provos/libevent/ (libevent-dev)
+* libseccomp (optional, linux): enables process restrictions for better
+  security.
 
-## 2.Compiling
+### 2.Compiling
 
 ```javascript
 [user @node1 HMCached]$ cd dram_repartition
@@ -39,18 +41,18 @@ HMCached Usage
 [user @node1 HMCached]$ make
 ```
 
-## 4.Running
+### 4.Running
 
 The run mode of HMCached is similar to Memcached.
 
-### Server-side:
+#### Server-side:
 
 The following operation is based on an assumption that memory in Node 0 is DRAM while memory in Node 1 is NVM.
 ```javascript
 [user @node1 HMCached]$ numactl --cpunodebind=0 --membind=0 ./memcached -l 127.0.0.1 -p 11211
 ```
 
-### Client-side (e.g., running with telnet):
+#### Client-side (e.g., running with telnet):
 ```javascript
 [user @node1 home]$ telnet 127.0.0.1 11211
 Trying 127.0.0.1...
@@ -65,7 +67,7 @@ STAT pid 8861
 (etc)
 ```
 
-## 5. Benchmarks
+### 5. Benchmarks
 
 * Yahoo! Cloud Serving Benchmark, https://github.com/brianfrankcooper/YCSB
 * Mutilate: high-performance memcached load generator, https://github.com/leverich/mutilate
