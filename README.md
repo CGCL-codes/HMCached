@@ -5,6 +5,7 @@ objects on NVM, and migrates them to fast DRAM based on dynamic hotness threshol
 with an effective DRAM repartition strategy, and thus significantly enhance the performance gain from the small-size DRAM. Moreover, we propose a NVM-friendly index structure to
 further mitigate data accesses to NVM. Compared to previous studies, our hot data migration policy is implemented at the application-level, without modifying hardware and operating
 systems. 
+
 &#160; &#160; &#160; &#160; We implement the proposed system with Memcached (https://memcached.org/). 
 
 <!--
