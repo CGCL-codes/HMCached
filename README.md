@@ -6,6 +6,8 @@ with an effective DRAM repartition strategy, and thus significantly enhance the 
 further mitigate data accesses to NVM. Compared to previous studies, our hot data migration policy is implemented at the application level, without modifying hardware and operating
 systems. We implement the proposed schemes with Memcached.
 
+HMCached Setup, Compiling, Configuration and How to use
+------------
 
 See: https://memcached.org/about
 
