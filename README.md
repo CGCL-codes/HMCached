@@ -5,7 +5,6 @@ objects on NVM, and migrates them to fast DRAM based on dynamic hotness threshol
 with an effective DRAM repartition strategy, and thus significantly enhance the performance gain from the small-size DRAM. Moreover, we propose a NVM-friendly index structure to
 further mitigate data accesses to NVM. Compared to previous studies, our hot data migration policy is implemented at the application-level, without modifying hardware and operating
 systems. 
-
 &#160; &#160; &#160; &#160; We implement the proposed system with Memcached (https://memcached.org/). 
 
 <!--
@@ -44,13 +43,13 @@ HMCached Usage
 
 The run mode of HMCached is similar to Memcached.
 
-#### Server-side:
+#### * Server-side:
 
 The following operation is based on an assumption that memory in Node 0 is DRAM while memory in Node 1 is NVM.
 ```javascript
 [user @node1 HMCached]$ numactl --cpunodebind=0 --membind=0 ./memcached -l 127.0.0.1 -p 11211
 ```
-##### Command-line Options:
+#### Command-line Options:
 ```javascript
 --maxbytes                  // The size of available DRAM, the unit is byte.
 --maxbytes_nvm              // The size of available NVM, the unit is byte.
@@ -58,7 +57,7 @@ The following operation is based on an assumption that memory in Node 0 is DRAM 
 --dram_repartition_period   // The period of dram repartition.
 ```
 
-#### Client-side (e.g., running with telnet):
+#### * Client-side (e.g., running with telnet):
 ```javascript
 [user @node1 home]$ telnet 127.0.0.1 11211
 Trying 127.0.0.1...
