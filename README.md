@@ -33,9 +33,9 @@ HMCached Usage
 ### 2. Compiling
 
 ```javascript
-[user @node1 HMCached]$ cd dram_repartition
-[user @node1 dram_repartition]$ make
-[user @node1 HMCached]$ sudo cp libdram_repartition.so /usr/lib
+[user @node1 HMCached]$ cd dram_reassignment
+[user @node1 dram_reassignment]$ make
+[user @node1 HMCached]$ sudo cp libdram_reassignment.so /usr/lib
 [user @node1 HMCached]$ cd HMCached
 [user @node1 HMCached]$ autoreconf -fis 
 [user @node1 HMCached]$ ./configure
