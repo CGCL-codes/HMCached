@@ -6,8 +6,8 @@
 #else
 
 // ***** DRAM Repartition *****
-void update_repartition_counter(unsigned slabs_clsid, unsigned oldval, unsigned newval);
-void do_dram_repartition(unsigned int *slabs_new);
+void update_counter_mapping_set(unsigned slabs_clsid, unsigned oldval, unsigned newval);
+void compute_dram_reassignment(unsigned int *slabs_new);
 
 #define MEMCACHED_ASSOC_DELETE(arg0, arg1)
 #define MEMCACHED_ASSOC_DELETE_ENABLED() (0)
