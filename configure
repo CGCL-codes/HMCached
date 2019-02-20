@@ -4401,7 +4401,7 @@ fi
 if test "$ICC" = "yes" -o "$GCC" = "yes"; then :
 
     if test "$CLANG" = "no"; then :
-  CFLAGS="$CFLAGS -pthread"
+  CFLAGS="$CFLAGS -lnuma -pthread"
 fi
 
 fi
@@ -4988,7 +4988,7 @@ fi
 if test "x$enable_coverage" != "xno"; then
    if test "$GCC" = "yes" -a "$ICC" != "yes" -a "$CLANG" != "yes"
    then
-      CFLAGS="$CFLAGS -pthread"
+      CFLAGS="$CFLAGS -lnuma -pthread"
       # Extract the first word of "gcov", so it can be a program name with args.
 set dummy gcov; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -5418,7 +5418,7 @@ else
   le_found=no
   for ledir in $trylibeventdir "" $prefix /usr/local ; do
     LDFLAGS="$saved_LDFLAGS"
-    LIBS="-levent $saved_LIBS"
+    LIBS="-levent $saved_LIBS -lm -ldl -L$PWD/dram_reassignment -ldram_reassignment"
 
     # Skip the directory if it isn't there.
     if test ! -z "$ledir" -a ! -d "$ledir" ; then
@@ -5488,7 +5488,7 @@ fi
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_libevent_dir" >&5
 $as_echo "$ac_cv_libevent_dir" >&6; }
-LIBS="-levent $LIBS"
+LIBS="-levent $LIBS -lm -ldl -L$PWD/dram_reassignment -ldram_reassignment"
 if test $ac_cv_libevent_dir != "(system)"; then
   if test -d "$ac_cv_libevent_dir/lib" ; then
     LDFLAGS="-L$ac_cv_libevent_dir/lib $LDFLAGS"

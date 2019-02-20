@@ -150,7 +150,7 @@ AUTOMAKE = ${SHELL} /home/leezw/HMCached/missing automake-1.13
 AWK = gawk
 CC = gcc -std=gnu99
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -pthread -pthread -Wall -Werror -pedantic -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls
+CFLAGS = -g -O2 -lnuma -pthread -lnuma -pthread -Wall -Werror -pedantic -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
@@ -172,7 +172,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -levent 
+LIBS = -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/leezw/HMCached/missing makeinfo
 MKDIR_P = /bin/mkdir -p

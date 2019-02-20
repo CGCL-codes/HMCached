@@ -72,7 +72,7 @@ AC_DEFUN([DETECT_SUNCC],
 DETECT_SUNCC([CFLAGS="-mt $CFLAGS"], [])
 AS_IF([test "$ICC" = "yes" -o "$GCC" = "yes"],
 [
-    AS_IF(test "$CLANG" = "no",[CFLAGS="$CFLAGS -pthread"])
+    AS_IF(test "$CLANG" = "no",[CFLAGS="$CFLAGS -lnuma -pthread"])
 ])
 
 if test "$ICC" = "no"; then
@@ -179,7 +179,7 @@ AC_ARG_ENABLE(coverage,
 if test "x$enable_coverage" != "xno"; then
    if test "$GCC" = "yes" -a "$ICC" != "yes" -a "$CLANG" != "yes"
    then
-      CFLAGS="$CFLAGS -pthread"
+      CFLAGS="$CFLAGS -lnuma -pthread"
       AC_PATH_PROG([PROFILER], [gcov], "no", [$PATH])
       if test "x$PROFILER" != "xno"; then
          # Issue 97: The existence of gcov doesn't mean we have -lgcov
@@ -258,7 +258,7 @@ AC_CACHE_CHECK([for libevent directory], ac_cv_libevent_dir, [
   le_found=no
   for ledir in $trylibeventdir "" $prefix /usr/local ; do
     LDFLAGS="$saved_LDFLAGS"
-    LIBS="-levent $saved_LIBS"
+    LIBS="-levent $saved_LIBS -lm -ldl -L$PWD/dram_reassignment -ldram_reassignment"
 
     # Skip the directory if it isn't there.
     if test ! -z "$ledir" -a ! -d "$ledir" ; then
@@ -306,7 +306,7 @@ AC_CACHE_CHECK([for libevent directory], ac_cv_libevent_dir, [
 ])
   fi
 ])
-LIBS="-levent $LIBS"
+LIBS="-levent $LIBS -lm -ldl -L$PWD/dram_reassignment -ldram_reassignment"
 if test $ac_cv_libevent_dir != "(system)"; then
   if test -d "$ac_cv_libevent_dir/lib" ; then
     LDFLAGS="-L$ac_cv_libevent_dir/lib $LDFLAGS"
