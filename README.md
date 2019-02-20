@@ -1,10 +1,11 @@
-## HMCached: An In-Memory Key-Value Store on Hybrid DRAM/NVM Memories
+## HMCached: Hotspot-aware Hybrid Memory Management for In-Memory Key-Value Stores
 
-&#160; &#160; &#160; &#160; HMCached is a in-memory key-value store built on a DRAM/NVM hybrid memory system. HMCached develops an application-level data access accounting mechanism to track hotness of
-objects on NVM, and migrates them to fast DRAM based on dynamic hotness threshold adjustment. HMCached adopts slab-based memory allocation and solves the slab calcification problem
-with an effective DRAM repartition strategy, and thus significantly enhance the performance gain from the small-size DRAM. Moreover, we propose a NVM-friendly index structure to
-further mitigate data accesses to NVM. Compared to previous studies, our hot data migration policy is implemented at the application-level, without modifying hardware and operating
-systems. 
+&#160; &#160; &#160; &#160; HMCached is an in-memory K-V store built on a
+hybrid DRAM/NVM system. HMCached utilizes an application-level data access counting mechanism to identify frequently-accessed
+(hotspot) objects (i.e., K-V pairs) in NVM, and migrates them to fast DRAM to reduce the costly NVM accesses. We also propose an
+NVM-friendly index structure to store the frequently-updated portion of object metadata in DRAM, and thus further mitigate the NVM
+accesses. Moreover, we propose a benefit-aware memory reassignment policy to address the slab calcification problem in slab-based
+K-V store systems, and significantly improve the benefit gain from the DRAM.
 
 &#160; &#160; &#160; &#160; We implement the proposed system with Memcached (https://memcached.org/). 
 
