@@ -9,14 +9,6 @@ K-V store systems, and significantly improve the benefit gain from the DRAM.
 
 &#160; &#160; &#160; &#160; We implement the proposed system with Memcached (https://memcached.org/). 
 
-<!--
-Compared on the vanilla Memcached, HMCached has added the following functions:
-* **Architecture**:
-* **NVM-friendly Index Structure**:
-* **Hotness-Aware Object Migration**:
-* **Slab-based memory management**:
--->
-
 HMCached Usage
 ------------
 
@@ -56,7 +48,7 @@ The following operation is based on an assumption that memory in Node 0 is DRAM 
 --maxbytes                  // The size of available DRAM, the unit is byte.
 --maxbytes_nvm              // The size of available NVM, the unit is byte.
 --threshold_adjust_period   // The period of threshold adjustment.
---dram_repartition_period   // The period of dram repartition.
+--dram_reassignment_period  // The period of dram reassignment.
 ```
 
 #### * Client-side (e.g., running with telnet):
