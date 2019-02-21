@@ -67,8 +67,7 @@ memcached_debug-memcached.o: memcached.c /usr/include/stdc-predef.h \
  /usr/include/bits/fcntl-linux.h /usr/include/netinet/tcp.h \
  /usr/include/arpa/inet.h /usr/include/bits/waitflags.h \
  /usr/include/bits/waitstatus.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h /usr/include/sysexits.h \
- /usr/include/numa.h
+ /usr/include/bits/stdlib-float.h /usr/include/sysexits.h
 
 /usr/include/stdc-predef.h:
 
@@ -357,5 +356,3 @@ util.h:
 /usr/include/bits/stdlib-float.h:
 
 /usr/include/sysexits.h:
-
-/usr/include/numa.h:

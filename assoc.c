@@ -447,8 +447,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
 
         res->memory_is_dram = 0;
         res->in_use = 1;
-        res->in_eviction_pool = 0;  // TODO
-        res->idle_cycle = it->index->idle_cycle;
+        res->idle_periods = it->index->idle_periods;
         res->refcount = it->index->refcount;
         res->counter = it->index->counter;
         res->keysign = keysign(ITEM_key(it), it->nkey);
@@ -492,8 +491,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
 
         res->memory_is_dram = 0;
         res->in_use = 1;
-        res->in_eviction_pool = 0;  // TODO
-        res->idle_cycle = it->index->idle_cycle;
+        res->idle_periods = it->index->idle_periods;
         res->refcount = it->index->refcount;
         res->counter = it->index->counter;
         res->keysign = keysign(ITEM_key(it), it->nkey);
@@ -539,8 +537,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             }
             new->memory_is_dram = 0;
             new->in_use = 1;
-            new->in_eviction_pool = 0;  // TODO
-            new->idle_cycle = res->idle_cycle;
+            new->idle_periods = res->idle_periods;
             new->refcount = res->refcount;
             new->counter = res->counter;
             new->keysign = res->keysign;
@@ -576,8 +573,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             }
             new->memory_is_dram = 0;
             new->in_use = 1;
-            new->in_eviction_pool = 0;  // TODO
-            new->idle_cycle = res->idle_cycle;
+            new->idle_periods = res->idle_periods;
             new->refcount = res->refcount;
             new->counter = res->counter;
             new->keysign = res->keysign;

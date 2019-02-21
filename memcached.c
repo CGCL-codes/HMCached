@@ -2467,14 +2467,14 @@ static void process_bin_update(conn *c) {
     item *dit = assoc_find(key, nkey, hv);
     if (dit) {
         if (dit->time < settings.decay_counter_time)
-            counter = (dit->counter >> settings.divisors[dit->idle_cycle]) + settings.set_incr;
+            counter = (dit->counter >> settings.divisors[dit->idle_periods]) + settings.set_incr;
         else
             counter = dit->counter + settings.set_incr;
     } else {
         item_nvm *nit = assoc_find_nvm(key, nkey, hv);
         if (nit) {
             if (nit->index->time < settings.decay_counter_time)
-                counter = (nit->index->counter >> settings.divisors[nit->index->idle_cycle]) + settings.set_incr;
+                counter = (nit->index->counter >> settings.divisors[nit->index->idle_periods]) + settings.set_incr;
             else
                 counter = nit->index->counter + settings.set_incr;
         }
@@ -2987,13 +2987,13 @@ enum store_item_type do_store_item(item *it, int comm, conn *c, const uint32_t h
         }
         if (stored == NOT_STORED && failed_alloc == 0) {
             it->time = current_time;
-            it->idle_cycle = 0;
+            it->idle_periods = 0;
 
             if (old_it != NULL) {
                 STORAGE_delete(c->thread->storage, old_it);
 
                 if (old_it->time < settings.decay_counter_time)
-                    it->counter = (old_it->counter >> settings.divisors[old_it->idle_cycle]) + settings.set_incr;
+                    it->counter = (old_it->counter >> settings.divisors[old_it->idle_periods]) + settings.set_incr;
                 else
                     it->counter = old_it->counter + settings.set_incr;
                 while (!lockfree_push(ITEM_clsid(it), old_it->counter, it->counter));
@@ -3002,7 +3002,7 @@ enum store_item_type do_store_item(item *it, int comm, conn *c, const uint32_t h
                 item_nvm *nit = assoc_find_nvm(key, it->nkey, hv);
                 if (nit) {
                     if (nit->index->time < settings.decay_counter_time)
-                        it->counter = (nit->index->counter >> settings.divisors[nit->index->idle_cycle]) + settings.set_incr;
+                        it->counter = (nit->index->counter >> settings.divisors[nit->index->idle_periods]) + settings.set_incr;
                     else
                         it->counter = nit->index->counter + settings.set_incr;  
                     while (!lockfree_push(ITEM_clsid(it), nit->index->counter, it->counter));
@@ -3141,13 +3141,13 @@ enum store_item_type do_store_item_nvm(item_nvm *it, int comm, conn *c, const ui
 
         if (stored == NOT_STORED && failed_alloc == 0) {
             it->index->time = current_time;
-            it->index->idle_cycle = 0;
+            it->index->idle_periods = 0;
 
             if (old_it != NULL) {
                 STORAGE_delete(c->thread->storage, old_it);
 
                 if (old_it->index->time < settings.decay_counter_time)
-                    it->index->counter = (old_it->index->counter >> settings.divisors[old_it->index->idle_cycle]) + settings.set_incr;
+                    it->index->counter = (old_it->index->counter >> settings.divisors[old_it->index->idle_periods]) + settings.set_incr;
                 else
                     it->index->counter = old_it->index->counter + settings.set_incr;
                 old_it->index->time = current_time;
@@ -3157,7 +3157,7 @@ enum store_item_type do_store_item_nvm(item_nvm *it, int comm, conn *c, const ui
                 item *dit = assoc_find(key, it->nkey, hv);
                 if (dit) {
                     if (dit->time < settings.decay_counter_time)
-                        it->index->counter = (dit->counter >> settings.divisors[dit->idle_cycle]) + settings.set_incr;
+                        it->index->counter = (dit->counter >> settings.divisors[dit->idle_periods]) + settings.set_incr;
                     else
                         it->index->counter = dit->counter + settings.set_incr;
                     dit->time = current_time;
@@ -4327,14 +4327,14 @@ static void process_update_command(conn *c, token_t *tokens, const size_t ntoken
     item *dit = assoc_find(key, nkey, hv);
     if (dit) {
         if (dit->time < settings.decay_counter_time)
-            counter = (dit->counter >> settings.divisors[dit->idle_cycle]) + settings.set_incr;
+            counter = (dit->counter >> settings.divisors[dit->idle_periods]) + settings.set_incr;
         else
             counter = dit->counter + settings.set_incr;
     } else {
         item_nvm *nit = assoc_find_nvm(key, nkey, hv);
         if (nit) {
             if (nit->index->time < settings.decay_counter_time)
-                counter = (nit->index->counter >> settings.divisors[nit->index->idle_cycle]) + settings.set_incr;
+                counter = (nit->index->counter >> settings.divisors[nit->index->idle_periods]) + settings.set_incr;
             else
                 counter = nit->index->counter + settings.set_incr;
         }

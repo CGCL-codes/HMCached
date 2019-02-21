@@ -131,7 +131,7 @@ typedef struct __attribute__ ((__packed__)) _stritem {
     uint32_t        refcount:6;
     uint32_t        MQ_id:11;   // MQ_id = MQ_num + ITEM_clsid(it) *MQ_COUNT
     uint32_t        MQ_num:5;   // MQ_COUNT = 16
-    uint32_t        idle_cycle:2;
+    uint32_t        idle_periods:2;
     uint32_t        padding:8;
     uint32_t        counter;
 
@@ -153,9 +153,8 @@ typedef struct __attribute__ ((__packed__)) _stritem {
 typedef struct __attribute__ ((__packed__)) _index_nvm {
     uint32_t             memory_is_dram:1;
     uint32_t             in_use:1;
-    uint32_t             in_eviction_pool:1;
-    uint32_t             idle_cycle:2;
-    uint32_t             refcount:6;
+    uint32_t             idle_periods:2;
+    uint32_t             refcount:7;
     uint32_t             clock_bit:1;
     uint32_t             counter:21;
     uint32_t             keysign;
@@ -804,7 +803,7 @@ typedef struct __attribute__ ((__packed__)) _crawler {
     uint32_t        refcount:6;
     uint32_t        MQ_id:11;
     uint32_t        MQ_num:5;
-    uint32_t        idle_cycle:2;
+    uint32_t        idle_periods:2;
     uint32_t        padding_2:8;
     uint32_t        counter;
 
@@ -841,7 +840,7 @@ typedef struct __attribute__ ((__packed__)) _decayer {
     uint32_t        refcount:6;
     uint32_t        MQ_id:11;
     uint32_t        MQ_num:5;
-    uint32_t        idle_cycle:2;
+    uint32_t        idle_periods:2;
     uint32_t        padding_2:8;
     uint32_t        counter;
 

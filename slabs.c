@@ -1072,7 +1072,7 @@ static int slab_rebalance_move(void) {
                     // These are definitely requested, else fails assert
                     new_it->it_flags &= ~ITEM_LINKED;
                     new_it->refcount = 0;
-                    new_it->idle_cycle = it->idle_cycle;
+                    new_it->idle_periods = it->idle_periods;
                     new_it->counter = it->counter;
                     new_it->memory_is_dram = 1;
                     
@@ -1994,14 +1994,14 @@ bool decay_counter(int step)
                 if (search->counter == 0)
                     zero_objects[i]++;
                 
-                if (search->idle_cycle == 3) {
+                if (search->idle_periods == 3) {
                     while (!lockfree_push(ITEM_clsid(search), search->counter, 0));
                     search->counter = 0;
                 } else {
-                    uint64_t new_counter = search->counter >> settings.divisors[search->idle_cycle];
+                    uint64_t new_counter = search->counter >> settings.divisors[search->idle_periods];
                     while (!lockfree_push(ITEM_clsid(search), search->counter, new_counter));
                     search->counter = new_counter;
-                    search->idle_cycle++;
+                    search->idle_periods++;
                 }
                 
                 uint16_t tmp = get_MQ_num(search->counter);
@@ -2059,17 +2059,17 @@ bool decay_counter_nvm(int step)
             if (((search->it_flags & ITEM_LINKED) != 0) && (index->time < settings.decay_counter_time)) {
                 __sync_lock_test_and_set(&index->time, current_time);
                 // index->time = current_time;
-                if (index->idle_cycle == 3) {
+                if (index->idle_periods == 3) {
                     while (!lockfree_push(i, index->counter, 0));
                     //update_reallocate_counter(i, index->counter, 0);
                     index->counter = 0;
                 } else {
-                    int idle_cycle = index->idle_cycle;
+                    int idle_periods = index->idle_periods;
                     uint32_t counter = index->counter;
-                    while (!lockfree_push(i, counter, counter >> settings.divisors[idle_cycle]));
-                    //update_reallocate_counter(i, counter, counter >> settings.divisors[idle_cycle]);
-                    index->counter = counter >> settings.divisors[idle_cycle];
-                    index->idle_cycle++;
+                    while (!lockfree_push(i, counter, counter >> settings.divisors[idle_periods]));
+                    //update_reallocate_counter(i, counter, counter >> settings.divisors[idle_periods]);
+                    index->counter = counter >> settings.divisors[idle_periods];
+                    index->idle_periods++;
                 }
                 cur_step--;
                 res = false;

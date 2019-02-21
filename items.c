@@ -194,8 +194,6 @@ void adjust_migrate_threshold(unsigned int i)
         
         uint64_t free_chunks = get_dram_free_chunks(i);
         free_chunks += get_dram_free_slabs(i) * get_dram_perslab(i);
-        // LEEZW 
-        // free_chunks += zero_objects[i];
 
         if (md * 2 < free_chunks) {
             if (dta[i].migrate_threshold > 2)
@@ -535,7 +533,7 @@ item *do_item_alloc(char *key, const size_t nkey, const unsigned int flags,
     
     it->memory_is_dram = 1;
     it->counter = 0;
-    it->idle_cycle = 0;
+    it->idle_periods = 0;
     return it;
 }
 
@@ -1231,14 +1229,14 @@ item *do_item_get(const char *key, const size_t nkey, const uint32_t hv, conn *c
                 if (it->time < settings.decay_counter_time) {
                     it->time = current_time;
                     while (!lockfree_push(ITEM_clsid(it), it->counter,
-                                (it->counter >> settings.divisors[it->idle_cycle]) + settings.get_incr));
-                    it->counter = it->counter >> settings.divisors[it->idle_cycle];
+                                (it->counter >> settings.divisors[it->idle_periods]) + settings.get_incr));
+                    it->counter = it->counter >> settings.divisors[it->idle_periods];
                 } else {
                     it->time = current_time;
                     while (!lockfree_push(ITEM_clsid(it), it->counter, it->counter + settings.get_incr));
                 }
 
-                it->idle_cycle = 0;
+                it->idle_periods = 0;
                 it->counter += settings.get_incr;
                 do_item_update(it);
 
@@ -2010,7 +2008,7 @@ item *move_to_dram_zone(item_nvm *it, uint32_t hv)
     dram_it->refcount = 0;
     dram_it->memory_is_dram = 1;
     dram_it->counter = it->index->counter;
-    dram_it->idle_cycle = it->index->idle_cycle;
+    dram_it->idle_periods = it->index->idle_periods;
     dram_it->time = current_time;
 
     item *old_dram_it = assoc_find(ITEM_key(it), it->nkey, hv);
@@ -2053,9 +2051,8 @@ item_nvm *move_to_nvm_zone(item *it, uint32_t hv, bool record)
     nvm_it->index->refcount = 0;
     nvm_it->memory_is_dram = 0;
     nvm_it->index->memory_is_dram = 0;
-    nvm_it->index->in_eviction_pool = 0;
     nvm_it->index->counter = it->counter;
-    nvm_it->index->idle_cycle = it->idle_cycle;
+    nvm_it->index->idle_periods = it->idle_periods;
     nvm_it->index->time = it->time;
 
     item_nvm *old_nvm_it = assoc_find_nvm(ITEM_key(it), it->nkey, hv);
@@ -2139,8 +2136,7 @@ item_nvm *do_item_alloc_nvm(char *key, const size_t nkey, const unsigned int fla
 
     it->index->memory_is_dram = 0;
     it->index->in_use = 1;
-    it->index->in_eviction_pool = 0;
-    it->index->idle_cycle = 0;
+    it->index->idle_periods = 0;
     it->index->counter = 0;
     it->index->clock_bit = 1;
     return it;
@@ -2321,14 +2317,14 @@ item_nvm *do_item_get_nvm(const char *key, const size_t nkey, const uint32_t hv,
 
                 if (time < settings.decay_counter_time) {
                     while (!lockfree_push(ITEM_clsid(it), index->counter, 
-                            (index->counter >> settings.divisors[index->idle_cycle]) + settings.get_incr));
-                    index->counter = index->counter >> settings.divisors[index->idle_cycle];
+                            (index->counter >> settings.divisors[index->idle_periods]) + settings.get_incr));
+                    index->counter = index->counter >> settings.divisors[index->idle_periods];
                 } else {
                     while(!lockfree_push(ITEM_clsid(it), index->counter, index->counter + settings.get_incr));
                 }
 
                 index->counter += settings.get_incr;
-                index->idle_cycle = 0;
+                index->idle_periods = 0;
                 do_item_update_nvm(it);
 
                 // 2. try move to dram zone
