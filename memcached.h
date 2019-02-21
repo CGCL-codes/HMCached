@@ -31,11 +31,11 @@
 
 #include "sasl_defs.h"
 
-#define DRAM_REPARTITION 1   // DRAM repatririon
+#define DRAM_REASSIGNMENT 1   // DRAM repatririon
 #define DYNAMIC_THRESHOLD 1  // dynamic threshold
-//#define MULTIPLE_QUEUE 1     // multiple queue
+#define MULTIPLE_QUEUE 1     // multiple queue
 
-#define DRAM_REPARTITION_PERIOD 30000000
+#define DRAM_REASSIGNMENT_PERIOD 30000000
 #define DRAM_SIZE (1.0 * 6518 / 16 - 3 * 20)
 
 //#define MIGRATION_LOG 1
@@ -46,7 +46,7 @@
 #define DRAM 0
 #define NVM  1
 
-#define DRAM_REPARTITION_DEBUG
+#define DRAM_REASSIGNMENT_DEBUG
 
 // #define LEEZW
 
@@ -592,10 +592,10 @@ struct settings {
     size_t maxbytes_nvm;
     bool lru_maintainer_thread_nvm;
 
-    uint32_t dram_repartition_period;
+    uint32_t dram_reassignment_period;
     rel_time_t decay_counter_time;
-    bool dram_repartition;
-    int max_dram_repartition;
+    bool dram_reassignment;
+    int max_dram_reassignment;
 
     int migrate_threshold;
     int set_incr;

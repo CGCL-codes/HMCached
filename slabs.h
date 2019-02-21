@@ -99,7 +99,7 @@ void slabs_stats_nvm(ADD_STAT add_stats, void *c);
 unsigned int slabs_available_chunks_nvm(unsigned int id, bool *mem_flag, uint64_t *total_bytes, unsigned int *chunks_perslab);
 
 
-void dram_repartition(void);
+void try_dram_reassignment(void);
 int start_dram_maintenance_thread(void);
 void stop_dram_maintenance_thread(void);
 

@@ -22,7 +22,7 @@ extern "C" uint64_t get_itemsize_of_slabclass(unsigned slabs_clsid);
 
 extern "C" void init_counter_mapping_set();
 extern "C" void update_counter_mapping_set(unsigned slabs_clsid, uint64_t oldval, uint64_t newval);
-extern "C" void compute_dram_reassignment(unsigned int *slabs_new);
+extern "C" void do_dram_reassignment(unsigned int *slabs_new);
 
 
 void init_counter_mapping_set() 
@@ -52,7 +52,7 @@ void update_counter_mapping_set(unsigned slabs_clsid, uint64_t oldval, uint64_t 
             else if (iter->second > 1)
                 iter->second--;
         } else {
-            printf("*** oldval: %d ***\n", oldval);
+            printf("*** oldval: %zu ***\n", oldval);
         }
     }
 
@@ -130,7 +130,7 @@ uint64_t get_itemsize_of_slabclass(unsigned slabs_clsid) {
 }
 
 
-void compute_dram_reassignment(unsigned int *slabs_new)
+void do_dram_reassignment(unsigned int *slabs_new)
 {
     map<uint32_t, uint32_t> counter_mapping_set_copy[SLABCLASSNUM];
     for (uint64_t i = 0; i < SLABCLASSNUM; i++) {

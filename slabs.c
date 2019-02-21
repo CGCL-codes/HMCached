@@ -748,7 +748,7 @@ static pthread_cond_t slab_rebalance_cond = PTHREAD_COND_INITIALIZER;
 static volatile int do_run_slab_thread = 1;
 static volatile int do_run_slab_rebalance_thread = 1;
 
-int DRAM_Repartition_number = 0;
+int DRAM_reassignment_number = 0;
 
 #define DEFAULT_SLAB_BULK_CHECK 1
 int slab_bulk_check = DEFAULT_SLAB_BULK_CHECK;
@@ -1903,16 +1903,16 @@ static decayer decayers[MQ_COUNT * 64];
 static uint64_t decay_counter_times;
 static uint64_t decay_counter_nvm_times;
 
-static volatile int cur_dram_repartition_count;
+static volatile int cur_dram_reassignment_count;
 
 bool decay_counter(int step);
 bool decay_counter_nvm(int step);
 void insert_decayers(uint32_t sid);
 void insert_decayers_nvm(uint32_t sid);
-bool compute_dram_repartition(int *src, int *dst);
+bool compute_dram_reassignment(int *src, int *dst);
 
 
-void dram_repartition(void)
+void try_dram_reassignment(void)
 {
     if (pthread_mutex_trylock(&dram_rebalance_lock) != 0)
         return;
@@ -2133,7 +2133,7 @@ static void *dram_rebalance_thread(void *arg)
     pthread_mutex_lock(&dram_rebalance_lock);
     bool decay_flag = false;
     bool decay_flag_nvm = false;
-    bool dram_repartition_done = true;
+    bool dram_reassignment_done = true;
     int sleep_time = 0;
 
     while (do_run_dram_rebalance_thread) {
@@ -2141,11 +2141,11 @@ static void *dram_rebalance_thread(void *arg)
 
             decay_counter_times = 0;
             decay_counter_nvm_times = 0;
-            do_dram_repartition(slabs_new);
+            do_dram_reassignment(slabs_new);
 
             pthread_mutex_lock(&slabs_lock);            
 
-#ifdef DRAM_REPARTITION_DEBUG
+#ifdef DRAM_REASSIGNMENT_DEBUG
             printf("=== Optimal Allocation: ===\n");
             uint32_t current_dram = 0;
             uint32_t current_nvm  = 0;
@@ -2165,20 +2165,20 @@ static void *dram_rebalance_thread(void *arg)
             pthread_mutex_unlock(&slabs_lock);
 
             if (mem_limit_reached) {
-                dram_repartition_done = false;
-                DRAM_Repartition_number = 1;
+                dram_reassignment_done = false;
+                DRAM_reassignment_number = 1;
 
 
-#ifdef DRAM_REPARTITION_DEBUG
-                printf("=== start dram_repartition ===\n");
+#ifdef DRAM_REASSIGNMENT_DEBUG
+                printf("=== start dram_reassignment ===\n");
 #endif
             } else {
-                // Still have available DRAM memory, so don't need dram repartition,
+                // Still have available DRAM memory, so don't need dram reassignment,
                 // but has to decay counter.
-                dram_repartition_done = true;
+                dram_reassignment_done = true;
             }
 
-            cur_dram_repartition_count = settings.max_dram_repartition;
+            cur_dram_reassignment_count = settings.max_dram_reassignment;
             dram_rebalance_signal = 2;
 
             for (uint32_t i = POWER_SMALLEST; i < MQ_COUNT * 64; i++)
@@ -2212,7 +2212,7 @@ static void *dram_rebalance_thread(void *arg)
                         decay_flag_nvm = false;
 
                 if (decay_flag == false && decay_flag_nvm == false) {
-#ifdef DRAM_REPARTITION_DEBUG
+#ifdef DRAM_REASSIGNMENT_DEBUG
                     printf("decay_counter_times:     %8zu\n", decay_counter_times);
                     printf("decay_counter_nvm_times: %8zu\n", decay_counter_nvm_times);
                     printf("total_decay_times:       %8zu\n", decay_counter_times + decay_counter_nvm_times);
@@ -2221,26 +2221,26 @@ static void *dram_rebalance_thread(void *arg)
                 }
             }
 
-            if (dram_repartition_done == false) {
+            if (dram_reassignment_done == false) {
                 int src = 0, dst = 0;
                 bool res = false;
-                res = compute_dram_repartition(&src, &dst);
+                res = compute_dram_reassignment(&src, &dst);
                 
                 if (res) {
                     if (slabs_reassign(src, dst) != REASSIGN_RUNNING) {
-                        cur_dram_repartition_count--;
-                        if (cur_dram_repartition_count == 0)
-                            dram_repartition_done = true;
+                        cur_dram_reassignment_count--;
+                        if (cur_dram_reassignment_count == 0)
+                            dram_reassignment_done = true;
                     }
                 } else {
-                    dram_repartition_done = true;
+                    dram_reassignment_done = true;
                 }
             }
 
-            if (decay_flag == false && decay_flag_nvm == false && dram_repartition_done == true) {
+            if (decay_flag == false && decay_flag_nvm == false && dram_reassignment_done == true) {
                 dram_rebalance_signal = 0;
-#ifdef DRAM_REPARTITION_DEBUG
-                printf("dram_repartition finish at %d\n", current_time);
+#ifdef DRAM_REASSIGNMENT_DEBUG
+                printf("dram_reassignment finish at %d\n", current_time);
                 printf("========================\n\n");
 #endif
             }
@@ -2286,7 +2286,7 @@ void stop_dram_maintenance_thread()
 }
 
 
-bool compute_dram_repartition(int *src, int *dst)
+bool compute_dram_reassignment(int *src, int *dst)
 {
     int i;
     int max = 0, min = 0;
@@ -2618,7 +2618,7 @@ static void *update_counter_thread(void *arg)
                 uint64_t oldval = tmp;
                 tmp = element;
                 uint64_t newval = tmp;
-                update_repartition_counter(i, oldval, newval);
+                update_counter_mapping_set(i, oldval, newval);
             }
         }
         if (empty)

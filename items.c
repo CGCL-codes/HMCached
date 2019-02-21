@@ -697,8 +697,8 @@ int do_item_link(item *it, const uint32_t hv, bool from_user) {
         update_dta(ITEM_clsid(it), true, true);
 
         uint64_t curr = total_gets + total_sets - settings.load_requests;
-        if (curr != 0 && (curr % settings.dram_repartition_period) == 0)
-            dram_repartition();
+        if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
+            try_dram_reassignment();
     }
 
     return 1;
@@ -1249,8 +1249,8 @@ item *do_item_get(const char *key, const size_t nkey, const uint32_t hv, conn *c
                 __sync_fetch_and_add(&total_get_in_dram, 1);
 
                 uint64_t curr = total_gets + total_sets - settings.load_requests;
-                if (curr != 0 && (curr % settings.dram_repartition_period) == 0)
-                    dram_repartition();
+                if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
+                    try_dram_reassignment();
             }
             DEBUG_REFCNT(it, '+');
         }
@@ -2225,8 +2225,8 @@ int do_item_link_nvm(item_nvm *it, const uint32_t hv, bool from_user)
         update_dta(ITEM_clsid(it), true, false);
 
         uint64_t curr = total_gets + total_sets - settings.load_requests;
-        if (curr != 0 && (curr % settings.dram_repartition_period) == 0)
-            dram_repartition();
+        if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
+            try_dram_reassignment();
     }
 
     return 1;
@@ -2347,8 +2347,8 @@ item_nvm *do_item_get_nvm(const char *key, const size_t nkey, const uint32_t hv,
                 __sync_fetch_and_add(&total_get_in_nvm, 1);
 
                 uint64_t curr = total_gets + total_sets - settings.load_requests;
-                if (curr != 0 && (curr % settings.dram_repartition_period) == 0)
-                    dram_repartition();
+                if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
+                    try_dram_reassignment();
             }
         }
     }

@@ -279,10 +279,10 @@ static void settings_init(void) {
     settings.set_incr = 1; // 5;   // 5;
     settings.get_incr = 1;
     
-    settings.dram_repartition_period = DRAM_REPARTITION_PERIOD;
+    settings.dram_reassignment_period = DRAM_REASSIGNMENT_PERIOD;
     settings.decay_counter_time = 0;
-    settings.dram_repartition = true;
-    settings.max_dram_repartition = 256;
+    settings.dram_reassignment = true;
+    settings.max_dram_reassignment = 256;
 
     settings.threshold_adjust_period = 1000000;
 
@@ -8035,7 +8035,7 @@ int main (int argc, char **argv) {
     slabs_init_nvm(settings.maxbytes_nvm * 2048, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
 
-#ifdef DRAM_REPARTITION
+#ifdef DRAM_REASSIGNMENT
     lockfree_array_init();
 #endif
 
@@ -8121,12 +8121,12 @@ int main (int argc, char **argv) {
     }
 
 // LEEZW
-    if (settings.dram_repartition &&
+    if (settings.dram_reassignment &&
             start_dram_maintenance_thread() == -1) {
         exit(EXIT_FAILURE);
     }
 
-#ifdef DRAM_REPARTITION
+#ifdef DRAM_REASSIGNMENT
     if (settings.lockfree && 
             start_update_counter_thread() == -1) {
         exit(EXIT_FAILURE);
