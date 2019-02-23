@@ -172,8 +172,7 @@ unsigned int slabs_clsid(const size_t size) {
 void slabs_init(const size_t limit, const double factor, const bool prealloc, const uint32_t *slab_sizes) {
     int i = POWER_SMALLEST - 1;
     unsigned int size = sizeof(item) + settings.chunk_size;
-
-    size = 96;
+    //size = 96;
 
     mem_limit = limit;
 
@@ -206,9 +205,6 @@ void slabs_init(const size_t limit, const double factor, const bool prealloc, co
         slabclass[i].size = size;
         slabclass[i].perslab = settings.slab_page_size / slabclass[i].size;
        
-        if (i <= 20)
-            printf("SlabClass %2d: %4d\n", i, slabclass[i].size);
-
         if (slab_sizes == NULL)
             size *= factor;
         if (settings.verbose > 1) {
@@ -220,7 +216,7 @@ void slabs_init(const size_t limit, const double factor, const bool prealloc, co
     power_largest = i;
     slabclass[power_largest].size = settings.slab_chunk_size_max;
     slabclass[power_largest].perslab = settings.slab_page_size / settings.slab_chunk_size_max;
-    // printf("SlabClass %2d: %4d\n", power_largest, slabclass[power_largest].size);
+    
     if (settings.verbose > 1) {
         fprintf(stderr, "slab class %3d: chunk size %9u perslab %7u\n",
                 i, slabclass[i].size, slabclass[i].perslab);
@@ -1431,8 +1427,7 @@ void slabs_init_nvm(const size_t limit, const double factor, const bool prealloc
 {
     int i = POWER_SMALLEST - 1;
     unsigned int size = sizeof(item) + settings.chunk_size;
-
-    size = 96;
+    //size = 96;
     
     mem_limit_nvm = limit;
     
