@@ -45,11 +45,13 @@ The following operation is based on an assumption that memory in Node 0 is DRAM 
 ```
 #### Command-line Options:
 ```javascript
--m, --dram-limit=<num>     item memory in megabytes (default: 64 MB)
--e, --nvm-limit=<num>      item memory in megabytes (default: 64 MB)
-
---threshold_adjust_period   // The period of threshold adjustment.
---dram_reassignment_period  // The period of dram reassignment.
+-p, --port=<num>          TCP port to listen on (default: 11211)
+-l, --listen=<addr>       interface to listen on (default: INADDR_ANY)
+-h, --help                print this help and exit
+-m, --dram-limit=<num>    item memory in megabytes (default: 64 MB)
+-e, --nvm-limit=<num>     item memory in megabytes (default: 64 MB)
+-x, --threshold-adjust-period=<num>     number of requests served by each slab class (default: 10^7)
+-y, --dram-reassignment-period=<num>    number of requests served by all slab classes (default: 3*10^8)
 ```
 
 #### * Client-side (e.g., running with telnet):

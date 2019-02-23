@@ -6589,8 +6589,10 @@ static void usage(void) {
            "-d, --daemon              run as a daemon\n"
            "-r, --enable-coredumps    maximize core file limit\n"
            "-u, --user=<user>         assume identity of <username> (only when run as root)\n"
-           "-m, --dram-limit=<num>  item memory in megabytes (default: 64 MB)\n"
+           "-m, --dram-limit=<num>    item memory in megabytes (default: 64 MB)\n"
            "-e, --nvm-limit=<num>     item memory in megabytes (default: 64 MB)\n"
+           "-x, --threshold-adjust-period=<num>     number of requests served by each slab class (default: 10^7)\n"
+           "-y, --dram-reassignment-period=<num>    number of requests served by all slab classes (default: 3*10^8)\n"
            "-M, --disable-evictions   return error on memory exhausted instead of evicting\n"
            "-c, --conn-limit=<num>    max simultaneous connections (default: 1024)\n"
            "-k, --lock-memory         lock down all paged memory\n"
@@ -7123,7 +7125,8 @@ int main (int argc, char **argv) {
           "p:"  /* TCP port number to listen on */
           "s:"  /* unix socket path to listen on */
           "U:"  /* UDP port number to listen on */
-          "m:"  /* max memory to use for items in megabytes */
+          "m:"  /* max DRAM memory to use for items in megabytes */
+          "e:"  /* max NVM memory to use for items in megabytes */
           "M"   /* return error on memory exhausted */
           "c:"  /* max simultaneous connections */
           "k"   /* lock down all paged memory */
@@ -7148,8 +7151,8 @@ int main (int argc, char **argv) {
           "F"   /* Disable flush_all */
           "X"   /* Disable dump commands */
           "o:"  /* Extended generic options */
-          "x"   /* threshold_adjust_period */
-          "y"   /* dram_reassignment_period */
+          "x:"  /* threshold_adjust_period */
+          "y:"  /* dram_reassignment_period */
           ;
 
     /* process arguments */
@@ -7162,6 +7165,8 @@ int main (int argc, char **argv) {
         {"udp-port", required_argument, 0, 'U'},
         {"dram-limit", required_argument, 0, 'm'},
         {"nvm-limit", required_argument, 0, 'e'},
+        {"threshold-adjust-period", required_argument, 0, 'x'},
+        {"dram-reassignment-period", required_argument, 0, 'y'},
         {"disable-evictions", no_argument, 0, 'M'},
         {"conn-limit", required_argument, 0, 'c'},
         {"lock-memory", no_argument, 0, 'k'},
@@ -7222,6 +7227,13 @@ int main (int argc, char **argv) {
             break;
         case 'e':
             settings.maxbytes_nvm = ((size_t)atoi(optarg)) * 1024 * 1024;
+            break;
+        case 'x':
+            settings.threshold_adjust_period = (uint32_t)atoi(optarg);
+            break;
+        case 'y':
+            settings.dram_reassignment_period = (uint32_t)atoi(optarg);
+            break;
         case 'M':
             settings.evict_to_free = 0;
             break;
@@ -8036,7 +8048,7 @@ int main (int argc, char **argv) {
     lockfree_array_init();
 #endif
 
-    //printf("item: %lu\n", sizeof(item));
+    printf("item: %u, %u\n", settings.threshold_adjust_period, settings.dram_reassignment_period);
     //printf("item_nvm: %lu\n", sizeof(item_nvm));
     //printf("slabbed_bucket_nvm: %lu\n", sizeof(slabbed_bucket_nvm));
     //printf("slabbed_index_nvm: %lu\n", sizeof(slabbed_index_nvm));
