@@ -31,24 +31,13 @@
 
 #include "sasl_defs.h"
 
-#define DRAM_REASSIGNMENT 1   // DRAM repatririon
-#define DYNAMIC_THRESHOLD 1  // dynamic threshold
-#define MULTIPLE_QUEUE 1     // multiple queue
-
 #define DRAM_REASSIGNMENT_PERIOD 30000000
 #define DRAM_SIZE (1.0 * 6518 / 16 - 3 * 20)
-
-//#define MIGRATION_LOG 1
 
 #define NVM_ZONE 1
 #define MQ_COUNT 16
 
-#define DRAM 0
-#define NVM  1
-
 #define DRAM_REASSIGNMENT_DEBUG
-
-// #define LEEZW
 
 /** Maximum length of a key. */
 #define KEY_MAX_LENGTH 250
@@ -580,14 +569,10 @@ struct stats_state {
  * Globally accessible settings as derived from the commandline.
  */
 struct settings {
-    uint32_t migration_log_period;
     bool lockfree;
 
     int divisors[4];
     size_t maxbytes;
-    uint64_t load_requests;
-    bool first_inter;
-
     size_t maxbytes_nvm;
     bool lru_maintainer_thread_nvm;
 
@@ -596,7 +581,6 @@ struct settings {
     bool dram_reassignment;
     int max_dram_reassignment;
 
-    int migrate_threshold;
     int set_incr;
     int get_incr;
 

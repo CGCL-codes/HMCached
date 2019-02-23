@@ -6,9 +6,6 @@
 #define CLEAR_LRU(id) (id & ~(3<<6))
 #define GET_LRU(id) (id & (3<<6))
 
-#ifdef MIGRATION_LOG
-void init_migration_log(void);
-#endif
 
 // MIGRATE
 void init_migrate_threshold(void);

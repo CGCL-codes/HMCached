@@ -694,7 +694,7 @@ int do_item_link(item *it, const uint32_t hv, bool from_user) {
 
         update_dta(ITEM_clsid(it), true, true);
 
-        uint64_t curr = total_gets + total_sets - settings.load_requests;
+        uint64_t curr = total_gets + total_sets;
         if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
             try_dram_reassignment();
     }
@@ -939,18 +939,6 @@ void item_stats_totals(ADD_STAT add_stats, void *c) {
     APPEND_STAT("get_in_nvm", "%llu", (unsigned long long)total_get_in_nvm);
     APPEND_STAT("move_to_dram_zone", "%llu", (unsigned long long)total_move_to_dram_zone);
     APPEND_STAT("move_to_nvm_zone", "%llu", (unsigned long long)total_move_to_nvm_zone);
-
-    /*
-    if (settings.first_inter) {
-        settings.first_inter = false;
-        total_set_cmd = 0;
-        total_get_cmd = 0;
-        total_set_in_dram = 0;
-        total_get_in_dram = 0;
-        total_set_in_nvm  = 0;
-        total_get_in_nvm  = 0;
-    }
-    */
 }
 
 void item_stats(ADD_STAT add_stats, void *c) {
@@ -1246,7 +1234,7 @@ item *do_item_get(const char *key, const size_t nkey, const uint32_t hv, conn *c
                 uint64_t total_sets = __sync_fetch_and_add(&total_set_cmd, 0);
                 __sync_fetch_and_add(&total_get_in_dram, 1);
 
-                uint64_t curr = total_gets + total_sets - settings.load_requests;
+                uint64_t curr = total_gets + total_sets;
                 if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
                     try_dram_reassignment();
             }
@@ -2220,7 +2208,7 @@ int do_item_link_nvm(item_nvm *it, const uint32_t hv, bool from_user)
 
         update_dta(ITEM_clsid(it), true, false);
 
-        uint64_t curr = total_gets + total_sets - settings.load_requests;
+        uint64_t curr = total_gets + total_sets;
         if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
             try_dram_reassignment();
     }
@@ -2342,7 +2330,7 @@ item_nvm *do_item_get_nvm(const char *key, const size_t nkey, const uint32_t hv,
                 uint64_t total_sets = __sync_fetch_and_add(&total_set_cmd, 0);
                 __sync_fetch_and_add(&total_get_in_nvm, 1);
 
-                uint64_t curr = total_gets + total_sets - settings.load_requests;
+                uint64_t curr = total_gets + total_sets;
                 if (curr != 0 && (curr % settings.dram_reassignment_period) == 0)
                     try_dram_reassignment();
             }

@@ -230,16 +230,12 @@ static void stats_reset(void) {
 }
 
 static void settings_init(void) {
-    settings.migration_log_period = 1000000;
     settings.lockfree = true;
 
     settings.divisors[0] = 1;//2;
     settings.divisors[1] = 2;//4;
     settings.divisors[2] = 3;//8;
     settings.divisors[3] = 4;//16;
-
-    settings.load_requests = 0;
-    settings.first_inter = true;  // use for reset total_set_cmd
 
     settings.use_cas = true;
     settings.access = 0700;
@@ -275,11 +271,10 @@ static void settings_init(void) {
     settings.lru_maintainer_thread = false;
 
     settings.lru_maintainer_thread_nvm = false;
-    settings.migrate_threshold = 15;  // 已经弃用
-    settings.set_incr = 1; // 5;   // 5;
+    settings.set_incr = 1;
     settings.get_incr = 1;
     
-    settings.dram_reassignment_period = DRAM_REASSIGNMENT_PERIOD;
+    settings.dram_reassignment_period = 30000000;
     settings.decay_counter_time = 0;
     settings.dram_reassignment = true;
     settings.max_dram_reassignment = 256;
@@ -8030,10 +8025,6 @@ int main (int argc, char **argv) {
     assoc_init_nvm(settings.hashpower_init);
 
     conn_init();
-
-#ifdef MIGRATION_LOG
-    init_migration_log();
-#endif
  
     init_migrate_threshold();
 
@@ -8044,11 +8035,9 @@ int main (int argc, char **argv) {
     slabs_init_nvm(settings.maxbytes_nvm, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
 
-#ifdef DRAM_REASSIGNMENT
     lockfree_array_init();
-#endif
 
-    printf("item: %u, %u\n", settings.threshold_adjust_period, settings.dram_reassignment_period);
+    //printf("item: %u, %u\n", settings.threshold_adjust_period, settings.dram_reassignment_period);
     //printf("item_nvm: %lu\n", sizeof(item_nvm));
     //printf("slabbed_bucket_nvm: %lu\n", sizeof(slabbed_bucket_nvm));
     //printf("slabbed_index_nvm: %lu\n", sizeof(slabbed_index_nvm));
