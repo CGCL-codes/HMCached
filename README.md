@@ -14,7 +14,7 @@ HMCached Usage
 
 ### 1. External Dependencies
 
-* NUMA system: HMCached must runs in a non-uniform memory access (NUMA) system with multiple NUMA nodes,
+* NUMA system: HMCached must run in a non-uniform memory access (NUMA) system with multiple NUMA nodes,
                and each node presents a type of memory mediums.
 * NVM device: If without available NVM device, you can use HME for emulation, https://github.com/CGCL-codes/HME.
 * numactl-devel
