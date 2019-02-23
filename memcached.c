@@ -247,8 +247,8 @@ static void settings_init(void) {
     settings.udpport = 11211;
     /* By default this string should be NULL for getaddrinfo() */
     settings.inter = NULL;
-    settings.maxbytes = 32 * 1024 * 1024; /* default is 64MB */
-    settings.maxbytes_nvm = 32 * 1024 * 1024;
+    settings.maxbytes = 64 * 1024 * 1024; /* default is 64MB */
+    settings.maxbytes_nvm = 64 * 1024 * 1024;
     settings.maxconns = 1024;         /* to limit connections-related memory to about 5MB */
     settings.verbose = 0;
     settings.oldest_live = 0;
@@ -6589,7 +6589,8 @@ static void usage(void) {
            "-d, --daemon              run as a daemon\n"
            "-r, --enable-coredumps    maximize core file limit\n"
            "-u, --user=<user>         assume identity of <username> (only when run as root)\n"
-           "-m, --memory-limit=<num>  item memory in megabytes (default: 64 MB)\n"
+           "-m, --dram-limit=<num>  item memory in megabytes (default: 64 MB)\n"
+           "-e, --nvm-limit=<num>     item memory in megabytes (default: 64 MB)\n"
            "-M, --disable-evictions   return error on memory exhausted instead of evicting\n"
            "-c, --conn-limit=<num>    max simultaneous connections (default: 1024)\n"
            "-k, --lock-memory         lock down all paged memory\n"
@@ -7147,6 +7148,8 @@ int main (int argc, char **argv) {
           "F"   /* Disable flush_all */
           "X"   /* Disable dump commands */
           "o:"  /* Extended generic options */
+          "x"   /* threshold_adjust_period */
+          "y"   /* dram_reassignment_period */
           ;
 
     /* process arguments */
@@ -7157,7 +7160,8 @@ int main (int argc, char **argv) {
         {"port", required_argument, 0, 'p'},
         {"unix-socket", required_argument, 0, 's'},
         {"udp-port", required_argument, 0, 'U'},
-        {"memory-limit", required_argument, 0, 'm'},
+        {"dram-limit", required_argument, 0, 'm'},
+        {"nvm-limit", required_argument, 0, 'e'},
         {"disable-evictions", no_argument, 0, 'M'},
         {"conn-limit", required_argument, 0, 'c'},
         {"lock-memory", no_argument, 0, 'k'},
@@ -8021,28 +8025,21 @@ int main (int argc, char **argv) {
  
     init_migrate_threshold();
 
-    // 1  == 32MB
-    // 32 == 1GB
-    // 96 == 3GB
     slabs_init_bucket();
     slabs_init_index();
-    slabs_init(settings.maxbytes * DRAM_SIZE / 32, settings.factor, preallocate,
+    slabs_init(settings.maxbytes, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
-    //slabs_init(1, settings.factor, preallocate, 
-    //        use_slab_sizes ? slab_sizes : NULL);
-
-    // settings.maxbytes_nvm == 32 * 1024 * 1024
-    slabs_init_nvm(settings.maxbytes_nvm * 2048, settings.factor, preallocate,
+    slabs_init_nvm(settings.maxbytes_nvm, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
 
 #ifdef DRAM_REASSIGNMENT
     lockfree_array_init();
 #endif
 
-    printf("item: %lu\n", sizeof(item));
-    printf("item_nvm: %lu\n", sizeof(item_nvm));
-    printf("slabbed_bucket_nvm: %lu\n", sizeof(slabbed_bucket_nvm));
-    printf("slabbed_index_nvm: %lu\n", sizeof(slabbed_index_nvm));
+    //printf("item: %lu\n", sizeof(item));
+    //printf("item_nvm: %lu\n", sizeof(item_nvm));
+    //printf("slabbed_bucket_nvm: %lu\n", sizeof(slabbed_bucket_nvm));
+    //printf("slabbed_index_nvm: %lu\n", sizeof(slabbed_index_nvm));
 
 #ifdef EXTSTORE
     if (storage_file) {

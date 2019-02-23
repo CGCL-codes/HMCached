@@ -45,8 +45,9 @@ The following operation is based on an assumption that memory in Node 0 is DRAM 
 ```
 #### Command-line Options:
 ```javascript
---maxbytes                  // The size of available DRAM, the unit is byte.
---maxbytes_nvm              // The size of available NVM, the unit is byte.
+-m, --dram-limit=<num>     item memory in megabytes (default: 64 MB)
+-e, --nvm-limit=<num>      item memory in megabytes (default: 64 MB)
+
 --threshold_adjust_period   // The period of threshold adjustment.
 --dram_reassignment_period  // The period of dram reassignment.
 ```
