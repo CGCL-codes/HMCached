@@ -268,7 +268,7 @@ static void *assoc_maintenance_thread(void *arg) {
 static pthread_t maintenance_tid;
 
 int start_assoc_maintenance_thread() {
-    printf("Close start_assoc_maintenance_thread()...\n");
+    //printf("Close start_assoc_maintenance_thread()...\n");
     return 0;
 
     int ret;
@@ -346,10 +346,13 @@ item_nvm *assoc_find_nvm(const char *key, const size_t nkey, const uint32_t hv) 
     while (bucket) {
         for (i = 0; i < 6; i++) {
             index = &(bucket->indexs[i]);
-            if ((index->in_use == 1) && (index->keysign == sign)
-                    && (memcmp(key, ITEM_key(index->kvitem), nkey) == 0)) {
-                ret = index->kvitem;
-                return ret;
+            if ((index->in_use == 1) && (index->keysign == sign)) {
+                uint64_t tmp_kvitem = index->kvitem;
+                struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
+                if (memcmp(key, ITEM_key(kvitem), nkey) == 0) {
+                    ret = kvitem;
+                    return ret;
+                }
             }
         }
         bucket = bucket->next;
@@ -452,7 +455,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         res->counter = it->index->counter;
         res->keysign = keysign(ITEM_key(it), it->nkey);
         res->time = it->index->time;
-        res->kvitem = it;
+        res->kvitem = (uint64_t)it;
         slabs_free_index(it->index);
         it->index = res;
     } else {
@@ -496,7 +499,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         res->counter = it->index->counter;
         res->keysign = keysign(ITEM_key(it), it->nkey);
         res->time = it->index->time;
-        res->kvitem = it;
+        res->kvitem = (uint64_t)it;
         slabs_free_index(it->index);
         it->index = res;
     }
@@ -518,10 +521,13 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         while (bucket) {
             for (i = 0; i < 6; i++) {
                 index = &(bucket->indexs[i]);
-                if ((index->in_use == 1) && (index->keysign == sign)
-                        && (memcmp(key, ITEM_key(index->kvitem), nkey) == 0)) {
-                    res = index;
-                    break;
+                if ((index->in_use == 1) && (index->keysign == sign)) {
+                    uint64_t tmp_kvitem = index->kvitem;
+                    struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
+                    if (memcmp(key, ITEM_key(kvitem), nkey) == 0) {
+                        res = index;
+                        break;
+                    }
                 }
             }
             if (res)
@@ -544,8 +550,15 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             new->time = res->time;
         
             new->kvitem = res->kvitem;
-            res->kvitem->index = new;
-            res->kvitem = NULL;
+            
+            //res->kvitem->index = new;
+            uint64_t tmp_kvitem = res->kvitem;
+            struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
+            kvitem->index = new;
+            
+            // res->kvitem = NULL;
+            res->kvitem = 0;
+            
             res->in_use = 0;
         }
     } else {
@@ -555,10 +568,13 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         while (bucket) {
             for (i = 0; i < 6; i++) {
                 index = &(bucket->indexs[i]);
-                if ((index->in_use == 1) && (index->keysign == sign)
-                        && memcmp(key, ITEM_key(index->kvitem), nkey) == 0) {
-                    res = index;
-                    break;
+                if ((index->in_use == 1) && (index->keysign == sign)) {
+                    uint64_t tmp_kvitem = index->kvitem;
+                    struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
+                    if (memcmp(key, ITEM_key(kvitem), nkey) == 0) {
+                        res = index;
+                        break;
+                    }
                 }
             }
             if (res)
@@ -580,8 +596,15 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             new->time = res->time;
 
             new->kvitem = res->kvitem;
-            res->kvitem->index = new;
-            res->kvitem = NULL;
+            
+            //res->kvitem->index = new;
+            uint64_t tmp_kvitem = res->kvitem;
+            struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
+            kvitem->index = new;
+            
+            //res->kvitem = NULL;
+            res->kvitem = 0;
+            
             res->in_use = 0;
         }
     }

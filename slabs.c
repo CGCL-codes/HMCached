@@ -1699,7 +1699,8 @@ void *slabs_alloc_nvm(size_t size, unsigned int id,
         index_nvm *index = slabs_alloc_index();
         if (index) {
             ((item_nvm *)ret)->index = index;
-            index->kvitem = (item_nvm *)ret;
+            //TODO index->kvitem = (item_nvm *)ret;
+            index->kvitem = (uint64_t)ret;
             index->refcount = 1;
         } else {
             printf("error in slabs_alloc_nvm()\n");

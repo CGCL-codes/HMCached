@@ -138,17 +138,20 @@ typedef struct __attribute__ ((__packed__)) _stritem {
 } item;
 
 
-// 20B
+// 19B
 typedef struct __attribute__ ((__packed__)) _index_nvm {
-    uint32_t             memory_is_dram:1;
-    uint32_t             in_use:1;
-    uint32_t             idle_periods:2;
-    uint32_t             refcount:6;
-    uint32_t             clock_bit:1;
-    uint32_t             counter:21;
-    uint32_t             keysign;
-    rel_time_t           time;
-    struct _stritem_nvm  *kvitem;
+    uint32_t            memory_is_dram:1;
+    uint32_t            in_use:1;
+    uint32_t            clock_bit:1;
+    uint32_t            idle_periods:2;
+    uint32_t            counter:19;
+
+    uint32_t            keysign;
+    rel_time_t          time;
+
+    uint64_t            refcount:16;
+    uint64_t            kvitem:48;
+    //struct _stritem_nvm  *kvitem;
 } index_nvm;
 
 

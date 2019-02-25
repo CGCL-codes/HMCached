@@ -548,7 +548,7 @@ configure:5453: $? = 0
 configure:5489: result: (system)
 configure:5508: checking for library containing umem_cache_create
 configure:5539: gcc -std=gnu99 -o conftest -g -O2 -lnuma -pthread -lnuma -pthread   conftest.c -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment >&5
-/tmp/ccZD98FR.o: In function `main':
+/tmp/ccZqh7Bn.o: In function `main':
 /home/leezw/HMCached/conftest.c:33: undefined reference to `umem_cache_create'
 collect2: error: ld returned 1 exit status
 configure:5539: $? = 1
@@ -633,7 +633,7 @@ configure: failed program was:
 configure:5556: result: no
 configure:5564: checking for library containing gethugepagesizes
 configure:5595: gcc -std=gnu99 -o conftest -g -O2 -lnuma -pthread -lnuma -pthread   conftest.c -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment >&5
-/tmp/ccAbrKJX.o: In function `main':
+/tmp/cc8ygPkB.o: In function `main':
 /home/leezw/HMCached/conftest.c:33: undefined reference to `gethugepagesizes'
 collect2: error: ld returned 1 exit status
 configure:5595: $? = 1
@@ -870,7 +870,7 @@ conftest.c: In function 'main':
 conftest.c:38:11: warning: implicit declaration of function 'htonll' [-Wimplicit-function-declaration]
            return htonll(0);
            ^
-/tmp/ccFLM9TF.o: In function `main':
+/tmp/cc0n4a8i.o: In function `main':
 /home/leezw/HMCached/conftest.c:38: undefined reference to `htonll'
 collect2: error: ld returned 1 exit status
 configure:6039: $? = 1
@@ -928,7 +928,7 @@ configure:6120: $? = 0
 configure:6120: result: yes
 configure:6131: checking for getpagesizes
 configure:6131: gcc -std=gnu99 -o conftest -g -O2 -lnuma -pthread -lnuma -pthread   conftest.c -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment >&5
-/tmp/cc2KzXfW.o: In function `main':
+/tmp/cc1ZQpzw.o: In function `main':
 /home/leezw/HMCached/conftest.c:62: undefined reference to `getpagesizes'
 collect2: error: ld returned 1 exit status
 configure:6131: $? = 1
@@ -1001,7 +1001,7 @@ configure: failed program was:
 configure:6131: result: no
 configure:6142: checking for memcntl
 configure:6142: gcc -std=gnu99 -o conftest -g -O2 -lnuma -pthread -lnuma -pthread   conftest.c -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment >&5
-/tmp/ccekHtVW.o: In function `main':
+/tmp/ccCtd2Qt.o: In function `main':
 /home/leezw/HMCached/conftest.c:62: undefined reference to `memcntl'
 collect2: error: ld returned 1 exit status
 configure:6142: $? = 1
@@ -1159,7 +1159,7 @@ configure: failed program was:
 configure:6329: result: no
 configure:6334: checking for setppriv
 configure:6334: gcc -std=gnu99 -o conftest -g -O2 -lnuma -pthread -lnuma -pthread   conftest.c -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment >&5
-/tmp/ccvSnuiE.o: In function `main':
+/tmp/ccZwuqCc.o: In function `main':
 /home/leezw/HMCached/conftest.c:69: undefined reference to `setppriv'
 collect2: error: ld returned 1 exit status
 configure:6334: $? = 1
@@ -1239,7 +1239,7 @@ configure: failed program was:
 configure:6334: result: no
 configure:6412: checking for pledge
 configure:6412: gcc -std=gnu99 -o conftest -g -O2 -lnuma -pthread -lnuma -pthread   conftest.c -levent  -lm -ldl -L/home/leezw/HMCached/dram_reassignment -ldram_reassignment >&5
-/tmp/cckTy8hI.o: In function `main':
+/tmp/ccD1NXOl.o: In function `main':
 /home/leezw/HMCached/conftest.c:69: undefined reference to `pledge'
 collect2: error: ld returned 1 exit status
 configure:6412: $? = 1
@@ -1445,9 +1445,9 @@ configure:6521: result: no
 configure:6531: checking for xsltproc
 configure:6549: found /bin/xsltproc
 configure:6562: result: /bin/xsltproc
-configure:6714: checking that generated files are newer than configure
-configure:6720: result: done
-configure:6779: creating ./config.status
+configure:6715: checking that generated files are newer than configure
+configure:6721: result: done
+configure:6780: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -1583,7 +1583,7 @@ BUILD_SPECIFICATIONS_FALSE=''
 BUILD_SPECIFICATIONS_TRUE='#'
 CC='gcc -std=gnu99'
 CCDEPMODE='depmode=gcc3'
-CFLAGS='-g -O2 -lnuma -pthread -lnuma -pthread -Wall -Werror -pedantic -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls'
+CFLAGS='-g -O2 -lnuma -pthread -lnuma -pthread -Wall -Werror -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls'
 CPP='gcc -E'
 CPPFLAGS=''
 CYGPATH_W='echo'

@@ -8030,7 +8030,7 @@ int main (int argc, char **argv) {
 
     slabs_init_bucket();
     slabs_init_index();
-    slabs_init(settings.maxbytes, settings.factor, preallocate,
+    slabs_init(settings.maxbytes * 4, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
     slabs_init_nvm(settings.maxbytes_nvm * 1024, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);

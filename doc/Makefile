@@ -150,7 +150,7 @@ AUTOMAKE = ${SHELL} /home/leezw/HMCached/missing automake-1.13
 AWK = gawk
 CC = gcc -std=gnu99
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -lnuma -pthread -lnuma -pthread -Wall -Werror -pedantic -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls
+CFLAGS = -g -O2 -lnuma -pthread -lnuma -pthread -Wall -Werror -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
