@@ -2140,7 +2140,6 @@ static void *dram_rebalance_thread(void *arg)
 
             pthread_mutex_lock(&slabs_lock);            
 
-#ifdef DRAM_REASSIGNMENT_DEBUG
             printf("=== Optimal Allocation: ===\n");
             uint32_t current_dram = 0;
             uint32_t current_nvm  = 0;
@@ -2156,17 +2155,14 @@ static void *dram_rebalance_thread(void *arg)
             }
             printf("DRAM Current Total: %u MB\n", current_dram);
             printf("NVM  Current Total: %u MB\n", current_nvm);
-#endif
+
             pthread_mutex_unlock(&slabs_lock);
 
             if (mem_limit_reached) {
                 dram_reassignment_done = false;
                 DRAM_reassignment_number = 1;
 
-
-#ifdef DRAM_REASSIGNMENT_DEBUG
                 printf("=== start dram_reassignment ===\n");
-#endif
             } else {
                 // Still have available DRAM memory, so don't need dram reassignment,
                 // but has to decay counter.
@@ -2207,12 +2203,10 @@ static void *dram_rebalance_thread(void *arg)
                         decay_flag_nvm = false;
 
                 if (decay_flag == false && decay_flag_nvm == false) {
-#ifdef DRAM_REASSIGNMENT_DEBUG
                     printf("decay_counter_times:     %8zu\n", decay_counter_times);
                     printf("decay_counter_nvm_times: %8zu\n", decay_counter_nvm_times);
                     printf("total_decay_times:       %8zu\n", decay_counter_times + decay_counter_nvm_times);
                     printf("decay_counter_done at %d\n", current_time);
-#endif
                 }
             }
 
@@ -2234,10 +2228,8 @@ static void *dram_rebalance_thread(void *arg)
 
             if (decay_flag == false && decay_flag_nvm == false && dram_reassignment_done == true) {
                 dram_rebalance_signal = 0;
-#ifdef DRAM_REASSIGNMENT_DEBUG
                 printf("dram_reassignment finish at %d\n", current_time);
                 printf("========================\n\n");
-#endif
             }
         }
 

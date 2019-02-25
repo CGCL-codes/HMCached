@@ -8032,7 +8032,7 @@ int main (int argc, char **argv) {
     slabs_init_index();
     slabs_init(settings.maxbytes, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
-    slabs_init_nvm(settings.maxbytes_nvm, settings.factor, preallocate,
+    slabs_init_nvm(settings.maxbytes_nvm * 1024, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
 
     lockfree_array_init();
@@ -8124,12 +8124,11 @@ int main (int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-#ifdef DRAM_REASSIGNMENT
+
     if (settings.lockfree && 
             start_update_counter_thread() == -1) {
         exit(EXIT_FAILURE);
     }
-#endif
 
     if (settings.idle_timeout && start_conn_timeout_thread() == -1) {
         exit(EXIT_FAILURE);
