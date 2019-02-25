@@ -344,7 +344,7 @@ item_nvm *assoc_find_nvm(const char *key, const size_t nkey, const uint32_t hv) 
     int i;
     index_nvm *index;
     while (bucket) {
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < 3; i++) {
             index = &(bucket->indexs[i]);
             if ((index->in_use == 1) && (index->keysign == sign)) {
                 uint64_t tmp_kvitem = index->kvitem;
@@ -355,7 +355,11 @@ item_nvm *assoc_find_nvm(const char *key, const size_t nkey, const uint32_t hv) 
                 }
             }
         }
-        bucket = bucket->next;
+        uint64_t tmp_bucket = bucket->next;
+        bucket_nvm *next_bucket = (bucket_nvm *)tmp_bucket;
+        bucket = next_bucket;
+        //bucket = bucket->next;
+        
         ++depth;
     }
     return ret;
@@ -420,7 +424,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         index_nvm *res = NULL;
         int i;
         while (bucket) {
-            for (i = 0; i < 6; i++) {
+            for (i = 0; i < 3; i++) {
                 if ((bucket->indexs[i]).in_use == 0) {
                     res = &(bucket->indexs[i]);
                     break;
@@ -429,7 +433,11 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
             if (res)
                 break;
             last_bucket = bucket;
-            bucket = bucket->next;
+
+            uint64_t tmp_bucket = bucket->next;
+            bucket_nvm *next_bucket = (bucket_nvm *)tmp_bucket;
+            bucket = next_bucket;
+            //bucket = bucket->next;
         }
 
         if (res == NULL) {
@@ -439,10 +447,10 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
                 exit(0);
             }
             int j;
-            for (j = 0; j < 6; j++)
-                (new_bucket->indexs[i]).in_use = 0;
+            for (j = 0; j < 3; j++)
+                (new_bucket->indexs[j]).in_use = 0;
             if (last_bucket)
-                last_bucket->next = new_bucket;
+                last_bucket->next = (uint64_t)new_bucket;
             else
                 old_hashtable_nvm[oldbucket_nvm] = new_bucket;
             res = &(new_bucket->indexs[0]);
@@ -464,7 +472,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         index_nvm *res = NULL;
         int i;
         while (bucket) {
-            for (i = 0; i < 6; i++) {
+            for (i = 0; i < 3; i++) {
                 if ((bucket->indexs[i]).in_use == 0) {
                     res = &(bucket->indexs[i]);
                     break;
@@ -473,7 +481,11 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
             if (res)
                 break;
             last_bucket = bucket;
-            bucket = bucket->next;
+
+            uint64_t tmp_bucket = bucket->next;
+            bucket_nvm *next_bucket = (bucket_nvm *)tmp_bucket;
+            bucket = next_bucket;
+            //bucket = bucket->next;
         }
 
         if (res == NULL) {
@@ -483,10 +495,10 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
                 exit(0);
             }
             int j;
-            for (j = 0; j < 6; j++)
-                (new_bucket->indexs[i]).in_use = 0;
+            for (j = 0; j < 3; j++)
+                (new_bucket->indexs[j]).in_use = 0;  // TODO LEEZW
             if (last_bucket)
-                last_bucket->next = new_bucket;
+                last_bucket->next = (uint64_t)new_bucket;
             else
                 primary_hashtable_nvm[hv & hashmask(hashpower_nvm)] = new_bucket;
             res = &(new_bucket->indexs[0]);
@@ -519,7 +531,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         index_nvm *index = NULL;
         int i;
         while (bucket) {
-            for (i = 0; i < 6; i++) {
+            for (i = 0; i < 3; i++) {
                 index = &(bucket->indexs[i]);
                 if ((index->in_use == 1) && (index->keysign == sign)) {
                     uint64_t tmp_kvitem = index->kvitem;
@@ -532,7 +544,11 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             }
             if (res)
                 break;
-            bucket = bucket->next;
+
+            uint64_t tmp_bucket = bucket->next;
+            bucket_nvm *next_bucket = (bucket_nvm *)tmp_bucket;
+            bucket = next_bucket;
+            //bucket = bucket->next;
         }
 
         if (res) {
@@ -566,7 +582,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         index_nvm *index = NULL;
         int i;
         while (bucket) {
-            for (i = 0; i < 6; i++) {
+            for (i = 0; i < 3; i++) {
                 index = &(bucket->indexs[i]);
                 if ((index->in_use == 1) && (index->keysign == sign)) {
                     uint64_t tmp_kvitem = index->kvitem;
@@ -579,7 +595,11 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             }
             if (res)
                 break;
-            bucket = bucket->next;
+            
+            uint64_t tmp_bucket = bucket->next;
+            bucket_nvm *next_bucket = (bucket_nvm *)tmp_bucket;
+            bucket = next_bucket;
+            //bucket = bucket->next;
         }
         if (res) {
             index_nvm *new = slabs_alloc_index();
