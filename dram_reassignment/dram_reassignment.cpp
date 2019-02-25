@@ -62,40 +62,23 @@ void update_counter_mapping_set(unsigned slabs_clsid, uint64_t oldval, uint64_t 
     pthread_mutex_unlock(&counter_mapping_set_mutex[id]);
 }
 
-
-/*
-void print_reallocate_counter(unsigned slabs_clsid)
+void compute_optimal_allocation(vector<vector<uint64_t> > &Benefit, uint64_t dram_capacity, vector<uint64_t> &Snew)
 {
-    unsigned id = slabs_clsid;
-    map<uint32_t, uint32_t>::reverse_iterator iter;
-
-    pthread_mutex_lock(&counter_mutex[id]);
-
-    for (iter = reallocate_counter[id].rbegin(); iter != reallocate_counter[id].rend(); iter++)
-        cout << "val, " << iter->first << ", " << "count, " << iter->second << endl;
-
-    pthread_mutex_unlock(&counter_mutex[id]);
-}
-*/
-
-void optimal_allocation(vector<vector<uint64_t> > &Cost, uint64_t dram_capacity, vector<uint64_t> &Snew)
-{
-    vector<vector<uint64_t> > min_cost(SLABCLASSNUM, vector<uint64_t>(dram_capacity + 1, UINT64_MAX));
+    vector<vector<uint64_t> > max_benefit(SLABCLASSNUM, vector<uint64_t>(dram_capacity + 1, 0));
     vector<vector<uint64_t> > Save(SLABCLASSNUM, vector<uint64_t>(dram_capacity + 1, 0));
 
-    for (uint64_t i = 0; i <= dram_capacity; i++)
-        min_cost[0][i] = 0;
-
-    for (uint64_t i = 1; i <= SLABCLASSNUM - 1; i++)
-        min_cost[i][0] = min_cost[i-1][0] + Cost[i][0];
+    //for (uint64_t i = 0; i <= dram_capacity; i++)
+    //    min_cost[0][i] = 0;
+    //for (uint64_t i = 1; i <= SLABCLASSNUM - 1; i++)
+    //    min_cost[i][0] = min_cost[i-1][0] + Cost[i][0];
 
     uint64_t temp;
     for (uint64_t i = 1; i <= SLABCLASSNUM - 1; i++) {
         for (uint64_t j = 1; j <= dram_capacity; j++) {
             for (uint64_t k = 0; k <= j; k++) {
-                temp = min_cost[i - 1][j - k] + Cost[i][k];
-                if (temp < min_cost[i][j]) {
-                    min_cost[i][j] = temp;
+                temp = max_benefit[i - 1][j - k] + Benefit[i][k];
+                if (temp > max_benefit[i][j]) {
+                    max_benefit[i][j] = temp;
                     Save[i][j] = k;
                 }
             }
@@ -186,19 +169,19 @@ void do_dram_reassignment(unsigned int *slabs_new)
         }
     }
 
-    vector<vector<uint64_t> > cost(SLABCLASSNUM, vector<uint64_t>(dram_capacity + 1, 0));
+    vector<vector<uint64_t> > benefit(SLABCLASSNUM, vector<uint64_t>(dram_capacity + 1, 0));
     for (uint64_t i = 0; i < SLABCLASSNUM; i++) {
         if (total_access[i] == 0)
             continue;
         
         uint64_t size = get_itemsize_of_slabclass(i);
         for (uint64_t j = 0; j <= dram_capacity; j++) {
-            cost[i][j] = (total_access[i] - accumu_access[i][j]) * size;
+            benefit[i][j] = accumu_access[i][j] * size;
         }
     }
 
     vector<uint64_t> Snew(SLABCLASSNUM, 0);
-    optimal_allocation(cost, dram_capacity, Snew);
+    compute_optimal_allocation(benefit, dram_capacity, Snew);
 
     for (uint64_t i = 0; i < SLABCLASSNUM; i++)
         slabs_new[i] = Snew[i];
