@@ -157,7 +157,7 @@ typedef struct __attribute__ ((__packed__)) _index_nvm {
 
 // 19B * 3 + 6B = 63B
 typedef struct __attribute__ ((__packed__)) _bucket_nvm {
-    struct _index_nvm   indexs[3];
+    struct _index_nvm   indexes[3];
     uint64_t            next:48;
     //struct _bucket_nvm   *next;
 } bucket_nvm;

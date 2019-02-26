@@ -345,7 +345,7 @@ item_nvm *assoc_find_nvm(const char *key, const size_t nkey, const uint32_t hv) 
     index_nvm *index;
     while (bucket) {
         for (i = 0; i < 3; i++) {
-            index = &(bucket->indexs[i]);
+            index = &(bucket->indexes[i]);
             if ((index->in_use == 1) && (index->keysign == sign)) {
                 uint64_t tmp_kvitem = index->kvitem;
                 struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
@@ -425,8 +425,8 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         int i;
         while (bucket) {
             for (i = 0; i < 3; i++) {
-                if ((bucket->indexs[i]).in_use == 0) {
-                    res = &(bucket->indexs[i]);
+                if ((bucket->indexes[i]).in_use == 0) {
+                    res = &(bucket->indexes[i]);
                     break;
                 }
             }
@@ -448,12 +448,12 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
             }
             int j;
             for (j = 0; j < 3; j++)
-                (new_bucket->indexs[j]).in_use = 0;
+                (new_bucket->indexes[j]).in_use = 0;
             if (last_bucket)
                 last_bucket->next = (uint64_t)new_bucket;
             else
                 old_hashtable_nvm[oldbucket_nvm] = new_bucket;
-            res = &(new_bucket->indexs[0]);
+            res = &(new_bucket->indexes[0]);
         }
 
         res->memory_is_dram = 0;
@@ -473,8 +473,8 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         int i;
         while (bucket) {
             for (i = 0; i < 3; i++) {
-                if ((bucket->indexs[i]).in_use == 0) {
-                    res = &(bucket->indexs[i]);
+                if ((bucket->indexes[i]).in_use == 0) {
+                    res = &(bucket->indexes[i]);
                     break;
                 }
             }
@@ -496,12 +496,12 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
             }
             int j;
             for (j = 0; j < 3; j++)
-                (new_bucket->indexs[j]).in_use = 0;  // TODO LEEZW
+                (new_bucket->indexes[j]).in_use = 0;  // TODO LEEZW
             if (last_bucket)
                 last_bucket->next = (uint64_t)new_bucket;
             else
                 primary_hashtable_nvm[hv & hashmask(hashpower_nvm)] = new_bucket;
-            res = &(new_bucket->indexs[0]);
+            res = &(new_bucket->indexes[0]);
         }
 
         res->memory_is_dram = 0;
@@ -532,7 +532,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         int i;
         while (bucket) {
             for (i = 0; i < 3; i++) {
-                index = &(bucket->indexs[i]);
+                index = &(bucket->indexes[i]);
                 if ((index->in_use == 1) && (index->keysign == sign)) {
                     uint64_t tmp_kvitem = index->kvitem;
                     struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
@@ -583,7 +583,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         int i;
         while (bucket) {
             for (i = 0; i < 3; i++) {
-                index = &(bucket->indexs[i]);
+                index = &(bucket->indexes[i]);
                 if ((index->in_use == 1) && (index->keysign == sign)) {
                     uint64_t tmp_kvitem = index->kvitem;
                     struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
