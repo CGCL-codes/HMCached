@@ -2056,14 +2056,14 @@ bool decay_counter_nvm(int step)
                 __sync_lock_test_and_set(&index->time, current_time);
                 // index->time = current_time;
                 if (index->idle_periods == 3) {
-                    while (!lockfree_push(i, index->counter, 0));
-                    //update_reallocate_counter(i, index->counter, 0);
+                    //while (!lockfree_push(i, index->counter, 0));
+                    update_reallocate_counter(i, index->counter, 0);
                     index->counter = 0;
                 } else {
                     int idle_periods = index->idle_periods;
                     uint32_t counter = index->counter;
-                    while (!lockfree_push(i, counter, counter >> settings.divisors[idle_periods]));
-                    //update_reallocate_counter(i, counter, counter >> settings.divisors[idle_periods]);
+                    //while (!lockfree_push(i, counter, counter >> settings.divisors[idle_periods]));
+                    update_reallocate_counter(i, counter, counter >> settings.divisors[idle_periods]);
                     index->counter = counter >> settings.divisors[idle_periods];
                     index->idle_periods++;
                 }
