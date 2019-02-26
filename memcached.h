@@ -141,7 +141,7 @@ typedef struct __attribute__ ((__packed__)) _stritem {
 // 19B
 typedef struct __attribute__ ((__packed__)) _index_nvm {
     uint32_t            memory_is_dram:1;
-    uint32_t            in_use:1;
+    uint32_t            bucket_in_use:1;
     uint32_t            clock_bit:1;
     uint32_t            idle_periods:2;
     uint32_t            counter:19;

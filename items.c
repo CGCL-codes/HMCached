@@ -2123,7 +2123,7 @@ item_nvm *do_item_alloc_nvm(char *key, const size_t nkey, const unsigned int fla
     it->memory_is_dram = 0;  // memory is NVM
 
     it->index->memory_is_dram = 0;
-    it->index->in_use = 1;
+    it->index->bucket_in_use = 1;
     it->index->idle_periods = 0;
     it->index->counter = 0;
     it->index->clock_bit = 1;

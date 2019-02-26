@@ -346,7 +346,7 @@ item_nvm *assoc_find_nvm(const char *key, const size_t nkey, const uint32_t hv) 
     while (bucket) {
         for (i = 0; i < 3; i++) {
             index = &(bucket->indexes[i]);
-            if ((index->in_use == 1) && (index->keysign == sign)) {
+            if ((index->bucket_in_use == 1) && (index->keysign == sign)) {
                 uint64_t tmp_kvitem = index->kvitem;
                 struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
                 if (memcmp(key, ITEM_key(kvitem), nkey) == 0) {
@@ -425,7 +425,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         int i;
         while (bucket) {
             for (i = 0; i < 3; i++) {
-                if ((bucket->indexes[i]).in_use == 0) {
+                if ((bucket->indexes[i]).bucket_in_use == 0) {
                     res = &(bucket->indexes[i]);
                     break;
                 }
@@ -448,7 +448,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
             }
             int j;
             for (j = 0; j < 3; j++)
-                (new_bucket->indexes[j]).in_use = 0;
+                (new_bucket->indexes[j]).bucket_in_use = 0;
             if (last_bucket)
                 last_bucket->next = (uint64_t)new_bucket;
             else
@@ -457,7 +457,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         }
 
         res->memory_is_dram = 0;
-        res->in_use = 1;
+        res->bucket_in_use = 1;
         res->idle_periods = it->index->idle_periods;
         res->refcount = it->index->refcount;
         res->counter = it->index->counter;
@@ -473,7 +473,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         int i;
         while (bucket) {
             for (i = 0; i < 3; i++) {
-                if ((bucket->indexes[i]).in_use == 0) {
+                if ((bucket->indexes[i]).bucket_in_use == 0) {
                     res = &(bucket->indexes[i]);
                     break;
                 }
@@ -496,7 +496,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
             }
             int j;
             for (j = 0; j < 3; j++)
-                (new_bucket->indexes[j]).in_use = 0;  // TODO LEEZW
+                (new_bucket->indexes[j]).bucket_in_use = 0;  // TODO LEEZW
             if (last_bucket)
                 last_bucket->next = (uint64_t)new_bucket;
             else
@@ -505,7 +505,7 @@ int assoc_insert_nvm(item_nvm *it, const uint32_t hv) {
         }
 
         res->memory_is_dram = 0;
-        res->in_use = 1;
+        res->bucket_in_use = 1;
         res->idle_periods = it->index->idle_periods;
         res->refcount = it->index->refcount;
         res->counter = it->index->counter;
@@ -533,7 +533,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         while (bucket) {
             for (i = 0; i < 3; i++) {
                 index = &(bucket->indexes[i]);
-                if ((index->in_use == 1) && (index->keysign == sign)) {
+                if ((index->bucket_in_use == 1) && (index->keysign == sign)) {
                     uint64_t tmp_kvitem = index->kvitem;
                     struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
                     if (memcmp(key, ITEM_key(kvitem), nkey) == 0) {
@@ -558,7 +558,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
                 exit(0);
             }
             new->memory_is_dram = 0;
-            new->in_use = 1;
+            new->bucket_in_use = 1;
             new->idle_periods = res->idle_periods;
             new->refcount = res->refcount;
             new->counter = res->counter;
@@ -575,7 +575,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             // res->kvitem = NULL;
             res->kvitem = 0;
             
-            res->in_use = 0;
+            res->bucket_in_use = 0;
         }
     } else {
         bucket_nvm *bucket = primary_hashtable_nvm[hv & hashmask(hashpower_nvm)];
@@ -584,7 +584,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
         while (bucket) {
             for (i = 0; i < 3; i++) {
                 index = &(bucket->indexes[i]);
-                if ((index->in_use == 1) && (index->keysign == sign)) {
+                if ((index->bucket_in_use == 1) && (index->keysign == sign)) {
                     uint64_t tmp_kvitem = index->kvitem;
                     struct _stritem_nvm *kvitem = (struct _stritem_nvm *)tmp_kvitem;
                     if (memcmp(key, ITEM_key(kvitem), nkey) == 0) {
@@ -608,7 +608,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
                 exit(0);
             }
             new->memory_is_dram = 0;
-            new->in_use = 1;
+            new->bucket_in_use = 1;
             new->idle_periods = res->idle_periods;
             new->refcount = res->refcount;
             new->counter = res->counter;
@@ -625,7 +625,7 @@ void assoc_delete_nvm(const char *key, const size_t nkey, const uint32_t hv) {
             //res->kvitem = NULL;
             res->kvitem = 0;
             
-            res->in_use = 0;
+            res->bucket_in_use = 0;
         }
     }
 }
