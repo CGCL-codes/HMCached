@@ -2126,7 +2126,7 @@ item_nvm *do_item_alloc_nvm(char *key, const size_t nkey, const unsigned int fla
     it->index->bucket_in_use = 1;
     it->index->idle_periods = 0;
     it->index->counter = 0;
-    it->index->clock_bit = 1;
+    it->index->clock_bit = 0;
     return it;
 }
 
@@ -2199,6 +2199,7 @@ int do_item_link_nvm(item_nvm *it, const uint32_t hv, bool from_user)
 
     ITEM_set_cas(it, (settings.use_cas) ? get_cas_id_nvm() : 0);
     assoc_insert_nvm(it, hv);
+    it->index->clock_bit = 1;
     refcount_incr(it);
 
     if (from_user) {

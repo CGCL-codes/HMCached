@@ -159,6 +159,7 @@ typedef struct __attribute__ ((__packed__)) _index_nvm {
 typedef struct __attribute__ ((__packed__)) _bucket_nvm {
     struct _index_nvm   indexes[3];
     uint64_t            next:48;
+    uint64_t            bucket_flags:8;
     //struct _bucket_nvm   *next;
 } bucket_nvm;
 
