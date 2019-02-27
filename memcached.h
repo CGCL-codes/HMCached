@@ -201,7 +201,7 @@ typedef struct __attribute__ ((__packed__)) _slabbed_item_nvm {
 typedef struct __attribute__ ((__packed__)) _slabbed_bucket_nvm {
     struct _slabbed_bucket_nvm  *next;
     struct _slabbed_bucket_nvm  *prev;
-    uint32_t                    paddings[28];
+    uint32_t                    paddings[12];
 } slabbed_bucket_nvm;
 
 
