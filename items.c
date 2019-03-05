@@ -29,7 +29,8 @@ static void item_unlink_q(item *it);
 static unsigned int lru_type_map[4] = {HOT_LRU, WARM_LRU, COLD_LRU, TEMP_LRU};
 
 #define LARGEST_ID POWER_LARGEST
-#define LARGEST_ID_MQ POWER_LARGEST_MQ   // TODO TODO
+#define LARGEST_ID_MQ POWER_LARGEST_MQ
+#define LARGEST_ID_CLOCK POWER_LARGEST_CLOCK
 
 typedef struct {
     uint64_t evicted;
@@ -2194,12 +2195,15 @@ int do_item_link_nvm(item_nvm *it, const uint32_t hv, bool from_user)
 {
     assert(it->memory_is_dram == 0);
     assert((it->it_flags & (ITEM_LINKED|ITEM_SLABBED)) == 0);
+    pthread_mutex_lock(&clock_locks[ITEM_clsid(it)]);
     it->it_flags |= ITEM_LINKED;
+    it->index->clock_bit = 1;
+    pthread_mutex_unlock(&clock_locks[ITEM_clsid(it)]);
+ 
     it->index->time = current_time;
 
     ITEM_set_cas(it, (settings.use_cas) ? get_cas_id_nvm() : 0);
     assoc_insert_nvm(it, hv);
-    it->index->clock_bit = 1;
     refcount_incr(it);
 
     if (from_user) {
@@ -2220,7 +2224,11 @@ int do_item_link_nvm(item_nvm *it, const uint32_t hv, bool from_user)
 void do_item_unlink_nvm(item_nvm *it, const uint32_t hv)
 {
     if ((it->it_flags & ITEM_LINKED) != 0) {
+        pthread_mutex_lock(&clock_locks[ITEM_clsid(it)]);
         it->it_flags &= ~ITEM_LINKED;
+        it->index->clock_bit = 0;
+        pthread_mutex_unlock(&clock_locks[ITEM_clsid(it)]);
+
         assoc_delete_nvm(ITEM_key(it), it->nkey, hv);
         do_item_remove_nvm(it);
     }
@@ -2229,7 +2237,11 @@ void do_item_unlink_nvm(item_nvm *it, const uint32_t hv)
 void do_item_unlink_nolock_nvm(item_nvm *it, const uint32_t hv)
 {
     if ((it->it_flags & ITEM_LINKED) != 0) {
+        pthread_mutex_lock(&clock_locks[ITEM_clsid(it)]);
         it->it_flags &= ~ITEM_LINKED;
+        it->index->clock_bit = 0;
+        pthread_mutex_unlock(&clock_locks[ITEM_clsid(it)]);
+
         assoc_delete_nvm(ITEM_key(it), it->nkey, hv);
         do_item_remove_nvm(it);
     }
@@ -2249,7 +2261,10 @@ void do_item_update_nolock_nvm(item_nvm *it)
     assert((it->it_flags & ITEM_SLABBED) == 0);
     if ((it->it_flags & ITEM_LINKED) != 0) {
         it->index->time = current_time;
+
+        pthread_mutex_lock(&clock_locks[ITEM_clsid(it)]);
         it->index->clock_bit = 1;
+        pthread_mutex_unlock(&clock_locks[ITEM_clsid(it)]);
     }
 }
 
@@ -2260,7 +2275,10 @@ void do_item_update_nvm(item_nvm *it)
     assert((it->it_flags & ITEM_SLABBED) == 0);
     if ((it->it_flags & ITEM_LINKED) != 0) {
         it->index->time = current_time;
+
+        pthread_mutex_lock(&clock_locks[ITEM_clsid(it)]);
         it->index->clock_bit = 1;
+        pthread_mutex_unlock(&clock_locks[ITEM_clsid(it)]);
     }
 }
 

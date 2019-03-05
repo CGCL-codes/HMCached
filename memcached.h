@@ -95,6 +95,7 @@
 #define POWER_SMALLEST 1
 #define POWER_LARGEST  256 /* actual cap is 255 */
 #define POWER_LARGEST_MQ 1024
+#define POWER_LARGEST_CLOCK (63 + 1)
 
 #define SLAB_GLOBAL_PAGE_POOL 0 /* magic slab class for storing pages for reassignment */
 #define CHUNK_ALIGN_BYTES 8

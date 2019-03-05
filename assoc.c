@@ -57,7 +57,7 @@ static bool started_expanding = false;
 static unsigned int expand_bucket = 0;
 
 void assoc_init(const int hashtable_init) {
-    printf("assoc_init, hash_power: %d for DRAM_ZONE\n", hashtable_init);
+    //printf("assoc_init, hash_power: %d for DRAM_ZONE\n", hashtable_init);
     
     if (hashtable_init) {
         hashpower = hashtable_init;
@@ -316,7 +316,7 @@ static unsigned int expand_bucket_nvm = 0;
 
 
 void assoc_init_nvm(const int hashtable_init) {
-    printf("assoc_init_nvm, hash_power: %d for NVM_ZONE\n", hashtable_init);
+    //printf("assoc_init_nvm, hash_power: %d for NVM_ZONE\n", hashtable_init);
     
     if (hashtable_init) {
         hashpower_nvm = hashtable_init;

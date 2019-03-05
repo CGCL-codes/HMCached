@@ -109,8 +109,8 @@ void stop_dram_maintenance_thread(void);
 void item_link_clock_nvm(item_nvm *it);
 void item_unlink_clock_nvm(item_nvm *it);
 void item_set_clock_bit_nvm(item_nvm *it);
-item_nvm *item_evict_use_clock(const size_t ntotal, const unsigned int id);
 */
+item_nvm *item_evict_use_clock(const size_t ntotal, const unsigned int id);
 
 unsigned int get_dram_capacity_slab(unsigned int i);
 
@@ -141,7 +141,5 @@ uint64_t lockfree_pop(unsigned int i);
 
 int start_update_counter_thread(void);
 void stop_update_counter_thread(void);
-
-item_nvm *item_evict_use_clock(const size_t ntotal, const unsigned int id);
 
 #endif

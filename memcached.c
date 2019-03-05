@@ -8030,17 +8030,17 @@ int main (int argc, char **argv) {
 
     slabs_init_bucket();
     slabs_init_index();
-    slabs_init(settings.maxbytes * 4, settings.factor, preallocate,
+    slabs_init(settings.maxbytes, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
-    slabs_init_nvm(settings.maxbytes_nvm * 1024, settings.factor, preallocate,
+    slabs_init_nvm(settings.maxbytes_nvm, settings.factor, preallocate,
             use_slab_sizes ? slab_sizes : NULL);
 
     lockfree_array_init();
 
     //printf("item: %u, %u\n", settings.threshold_adjust_period, settings.dram_reassignment_period);
     //printf("item_nvm: %lu\n", sizeof(item_nvm));
-    printf("index_nvm: %lu\n", sizeof(index_nvm));
-    printf("bucket_nvm: %lu\n", sizeof(bucket_nvm));
+    //printf("index_nvm: %lu\n", sizeof(index_nvm));
+    //printf("bucket_nvm: %lu\n", sizeof(bucket_nvm));
     //printf("slabbed_bucket_nvm: %lu\n", sizeof(slabbed_bucket_nvm));
     //printf("slabbed_index_nvm: %lu\n", sizeof(slabbed_index_nvm));
 

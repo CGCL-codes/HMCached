@@ -47,6 +47,9 @@ typedef struct {
     bool decay_counter_done;
     unsigned int decay_slabs_ptr;
     unsigned int decay_perslab_ptr;
+
+    unsigned int clock_slabs_ptr;
+    unsigned int clock_perslab_ptr;
 } slabclass_t;
 
 
@@ -170,6 +173,8 @@ unsigned int slabs_clsid(const size_t size) {
  * accordingly.
  */
 void slabs_init(const size_t limit, const double factor, const bool prealloc, const uint32_t *slab_sizes) {
+    printf("DRAM Size: %zu MB\n", limit / 1024 / 1024);
+
     int i = POWER_SMALLEST - 1;
     unsigned int size = sizeof(item) + settings.chunk_size;
     //size = 96;
@@ -1425,6 +1430,7 @@ unsigned int slabs_clsid_nvm(const size_t size) {
 
 void slabs_init_nvm(const size_t limit, const double factor, const bool prealloc, const uint32_t *slab_sizes) 
 {
+    printf("NVM  Size: %zu MB\n", limit / 1024 / 1024);
     int i = POWER_SMALLEST - 1;
     unsigned int size = sizeof(item) + settings.chunk_size;
     //size = 96;
@@ -1461,6 +1467,8 @@ void slabs_init_nvm(const size_t limit, const double factor, const bool prealloc
     
         slabclass_nvm[i].size = slabclass[i].size - diff_size;
         slabclass_nvm[i].perslab = settings.slab_page_size / slabclass_nvm[i].size;
+        slabclass_nvm[i].clock_slabs_ptr = 0;
+        slabclass_nvm[i].clock_perslab_ptr = 0;
         pthread_mutex_init(&decay_lock_nvm[i], NULL);
 
         if (slab_sizes == NULL)
@@ -1470,6 +1478,8 @@ void slabs_init_nvm(const size_t limit, const double factor, const bool prealloc
     power_largest_nvm = i;
     slabclass_nvm[power_largest].size = slabclass[power_largest].size - diff_size;
     slabclass_nvm[power_largest].perslab = settings.slab_page_size / slabclass_nvm[power_largest].size;
+    slabclass_nvm[power_largest].clock_slabs_ptr = 0;
+    slabclass_nvm[power_largest].clock_perslab_ptr = 0;
     pthread_mutex_init(&decay_lock_nvm[power_largest], NULL);
 
     if (prealloc) {
@@ -1515,8 +1525,10 @@ static int grow_slab_list_nvm(const unsigned int id) {
         if (new_list == 0) return 0;
 
         pthread_mutex_lock(&decay_lock_nvm[id]);
+        pthread_mutex_lock(&clock_locks[id]);
         p->list_size = new_size;
         p->slab_list = new_list;
+        pthread_mutex_unlock(&clock_locks[id]);
         pthread_mutex_unlock(&decay_lock_nvm[id]);
     }
     return 1;
@@ -1564,7 +1576,9 @@ static int do_slabs_newslab_nvm(const unsigned int id) {
     split_slab_page_into_freelist_nvm(ptr, id);
     
     pthread_mutex_lock(&decay_lock_nvm[id]);
+    pthread_mutex_lock(&clock_locks[id]);
     p->slab_list[p->slabs++] = ptr;
+    pthread_mutex_unlock(&clock_locks[id]);
     pthread_mutex_unlock(&decay_lock_nvm[id]);
 
     return 1;
@@ -1803,69 +1817,62 @@ void slabs_stats_nvm(ADD_STAT add_stats, void *c) {
     pthread_mutex_unlock(&slabs_lock_nvm);
 }
 
-// TODO  2018.10.08
 item_nvm *item_evict_use_clock(const size_t ntotal, const unsigned int id)
 {
-    return NULL;
-    /*
-    // printf("LEEZW: item_evict_use_clock()\n");
-    // int tries = 100;
     item_nvm *search = NULL;
-    item_meta_nvm *m_search = NULL;
-    void *hold_lock = NULL;
+    item_nvm *res = NULL;
+    
+    pthread_mutex_lock(&clock_locks[id]);
     slabclass_t *p = &slabclass_nvm[id];
-    slabclass_meta_t *mp = &slabclass_meta_nvm[id];
-
-    pthread_mutex_lock(&clock_lock[id]);
-
-    unsigned int slabs_ptr = mp->slabs_ptr;
-    unsigned int perslab_ptr = mp->perslab_ptr;
-    unsigned int slabs_max = mp->m_slabs;
-    unsigned int perslab_max = mp->m_perslab;
-
-    if (slabs_ptr >= slabs_max || perslab_ptr >= perslab_max) {
-        pthread_mutex_unlock(&clock_lock[id]);
+    uint32_t slabs_ptr = p->clock_slabs_ptr;
+    uint32_t perslab_ptr = p->clock_perslab_ptr;
+    uint32_t slabs_max = p->slabs;
+    uint32_t perslab_max = p->perslab;
+    
+    if (slabs_max == 0)
         return NULL;
+
+    if (perslab_ptr >= perslab_max) {
+        perslab_ptr = 0;
+        slabs_ptr++;
+        if (slabs_ptr >= slabs_max)
+            slabs_ptr = 0;
     }
 
     while (slabs_ptr < slabs_max && perslab_ptr < perslab_max) {
-        m_search = (item_meta_nvm *)((char *)mp->m_slab_list[slabs_ptr] + perslab_ptr * mp->m_size);
-        
-        if (m_search->in_hashtable == 1) {
-            if (m_search->clock_bit == 1) {
-                m_search->clock_bit = 0;
+        void *hold_lock = NULL;
+        search = (item_nvm *)((char *)p->slab_list[slabs_ptr] + perslab_ptr * p->size);
+        if ((search->it_flags & ITEM_LINKED) != 0) {
+            if (search->index->clock_bit == 1) {
+                search->index->clock_bit = 0;
             } else {
-                search = (item_nvm *)((char *)p->slab_list[slabs_ptr] + perslab_ptr * p->size);
                 uint32_t hv = hash(ITEM_key(search), search->nkey);
                 if ((hold_lock = item_trylock(hv)) != NULL) {
-                    if (search->meta->refcount == 1) {
-                        assoc_delete_nvm(ITEM_key(search), search->nkey, hv);
-                        m_search->in_hashtable = 0;
-                        item_trylock_unlock(hold_lock);
-                        break;
-                    }
+                    if (((search->it_flags & ITEM_LINKED) != 0)
+                            && (search->index->refcount == 1))
+                        res = search;
+                    item_trylock_unlock(hold_lock);
                 }
             }
         }
-
+        
         perslab_ptr++;
-        if (perslab_ptr == perslab_max) {
+        if (perslab_ptr >= perslab_max) {
             perslab_ptr = 0;
             slabs_ptr++;
-            if (slabs_ptr == slabs_max)
+            if (slabs_ptr >= slabs_max)
                 slabs_ptr = 0;
         }
+        
+        if (res)
+            break;
     }
-
-    mp->slabs_ptr = slabs_ptr;
-    mp->perslab_ptr = perslab_ptr;
-
-    pthread_mutex_unlock(&clock_lock[id]);
-
-    //  TODO TODO TODO 
-    search->meta->refcount = 0;
-    return search;
-    */
+    
+    p->clock_slabs_ptr = slabs_ptr;
+    p->clock_perslab_ptr = perslab_ptr;
+    
+    pthread_mutex_unlock(&clock_locks[id]);
+    return res;
 }
 
 unsigned get_dram_capacity() {
