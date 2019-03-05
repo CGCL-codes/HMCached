@@ -150,7 +150,7 @@ void fill_item_stats_automove_nvm(item_stats_automove *am);
 item_nvm *do_item_get_nvm(const char *key, const size_t nkey, const uint32_t hv, conn *c, const bool do_update);
 item_nvm *do_item_touch_nvm(const char *key, const size_t nkey, uint32_t exptime, const uint32_t hv, conn *c);
 void item_stats_reset_nvm(void);
-extern pthread_mutex_t lru_locks_nvm[POWER_LARGEST];
+
 
 int start_lru_maintainer_thread_nvm(void *arg);
 int stop_lru_maintainer_thread_nvm(void);

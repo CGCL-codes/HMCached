@@ -2458,25 +2458,4 @@ void test_MQ(uint32_t id)
 
 void test_NVM_LRU(uint32_t id)
 {
-    /*
-    uint64_t tails = 0;
-    uint64_t heads = 0;
-    pthread_mutex_lock(&lru_locks_nvm[id]);
-    item *cur = tails_nvm[id];
-    while (cur) {
-        tails++;
-        cur = cur->prev;
-    }
-    printf("tails: %lu\n", tails);
-
-    cur = heads_nvm[id];
-    while (cur) {
-        heads++;
-        cur = cur->next;
-    }
-    printf("heads: %lu\n", heads);
-
-
-    pthread_mutex_unlock(&lru_locks_nvm[id]);
-    */
 }
